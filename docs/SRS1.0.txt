@@ -1,0 +1,370 @@
+Yazılım Gereksinim Dokümanı (SRS)
+Proje Adı: YKS Mentorluk Öğrenci Paneli (YKS-MÖP) Versiyon: 1.1 Tarih: 9 Kasım 2025
+
+1. Giriş
+1.1 Proje Amacı
+Bu projenin amacı, Türkiye'deki YKS sınavına hazırlanan öğrencilere mentorluk (psikolojik danışmanlık ve öğretmenlik) hizmeti veren bir işletmenin operasyonel süreçlerini dijitalleştirmektir. Geliştirilecek web tabanlı öğrenci paneli (YKS-MÖP), yöneticiler, alt-yöneticiler (danışman/öğretmen) ve öğrenciler arasındaki iletişimi, görev takibini, toplantı planlamasını ve performans analizini merkezi bir platform üzerinden yönetmeyi amaçlamaktadır.
+
+1.2 Proje Kapsamı
+Bu dokümanın 1.1 versiyonu, sistemin ilk fazında geliştirilecek temel modülleri ve fonksiyonları kapsamaktadır. Kapsam dahilindeki modüller şunlardır:
+
+Kullanıcı Yönetimi ve Yetkilendirme
+
+Profilim Modülü
+
+Duyurular Modülü
+
+Ders Programı Yönetimi Modülü
+
+Toplantı Modülü
+
+Sınavlarım Modülü
+
+Analiz Modülü
+
+Mesajlar Modülü
+
+AI Destekli Öneriler Modülü
+
+Sistem, ileride yeni modüllerin (örn: Ödev Takibi, Soru Bankası, Online Deneme) eklenmesine ve bir mobil uygulama ile senkronize çalışmaya olanak tanıyacak şekilde genişletilebilir (scalable) bir mimari ile tasarlanacaktır.
+
+1.3 Hedef Kitle ve Kullanıcı Rolleri
+Sistemde üç ana kullanıcı rolü tanımlanmıştır:
+
+Yönetici (Admin): Sistemin tüm fonksiyonlarına tam erişim yetkisine sahip kullanıcı. (İşletme sahibi veya sistem sorumlusu).
+
+Alt-Yönetici (Danışman/Öğretmen): Sadece kendisine atanmış olan öğrenciler üzerinde yetkili olan kullanıcı. (Mentor, psikolojik danışman veya ders öğretmeni).
+
+Öğrenci: Sadece kendi bilgilerini, programını, duyurularını ve analizlerini görüntüleyebilen/yönetebilen son kullanıcı.
+
+1.4 Tanımlar ve Kısaltmalar
+YKS: Yükseköğretim Kurumları Sınavı
+
+TYT: Temel Yeterlilik Testi
+
+AYT: Alan Yeterlilik Testleri
+
+Sayısal / Sözel / EA: Öğrencinin YKS'de hazırlandığı alanlar.
+
+Sistem: YKS Mentorluk Öğrenci Paneli (YKS-MÖP) web yazılımı.
+
+RBAC: Role-Based Access Control (Rol Bazlı Erişim Kontrolü).
+
+D/Y/B: Doğru / Yanlış / Boş
+
+AI (Artificial Intelligence): Yapay Zeka (Yeni)
+
+ML (Machine Learning): Makine Öğrenmesi (Yeni)
+
+API (Application Programming Interface): Uygulama Programlama Arayüzü
+
+2. Genel Açıklama
+2.1 Sistem Perspektifi
+YKS-MÖP, modern web tarayıcıları üzerinden erişilebilen, merkezi bir veritabanı kullanan ve sunucu-istemci mimarisine sahip bir web uygulaması olacaktır. Sistemin altyapısı, gelecekte bir mobil uygulama ile entegre olabilmesi için tüm fonksiyonlarını bir API (Application Programming Interface) üzerinden de sunabilecek şekilde tasarlanmalıdır.
+
+2.2 Genel Kısıtlamalar
+Genişletilebilirlik: Sistem mimarisi, yeni modüllerin eklenmesine (modüler tasarım) izin vermelidir.
+
+API Önceliği (API-First): Tüm veri alışverişi, gelecekteki mobil uygulama entegrasyonunu kolaylaştırmak için bir RESTful API üzerinden tasarlanmalıdır.
+
+Güvenlik: Tüm kullanıcı verileri (özellikle sınav sonuçları ve kişisel bilgiler) güvenli bir şekilde saklanmalı ve yetkisiz erişime karşı korunmalıdır (RBAC zorunludur).
+
+Harici Entegrasyon (WhatsApp): "Mesajlar Modülü", WhatsApp ile entegrasyon (örneğin wa.me URL şeması) gerektirecektir. Bu, mesajın gönderilmesi için kullanıcının cihazında (web/desktop) WhatsApp uygulamasının açılmasını tetikleyecektir.
+
+Harici Entegrasyon (ML Modeli) (Yeni): Sistem, "AI Destekli Öneriler Modülü" için, kitapyurdu.com verisi ile eğitilmiş olan 'Kitap Satış Tahmin Modeli' API'si ile entegre olmalıdır. Bu entegrasyonun gecikme süreleri, FOG-4.1'deki performans hedeflerini etkilememelidir.
+
+3. Fonksiyonel Gereksinimler
+3.1 Kullanıcı Yönetimi ve Yetkilendirme (Auth Modülü)
+FG-3.1.1: Güvenli Giriş/Çıkış
+
+Tüm kullanıcı rolleri (Yönetici, Alt-Yönetici, Öğrenci) sisteme kullanıcı adı (veya e-posta) ve şifre ile güvenli bir şekilde giriş (login) yapabilmelidir.
+
+Tüm kullanıcılar sistemden güvenli bir şekilde çıkış (logout) yapabilmelidir.
+
+FG-3.1.2: Yönetici Yetkileri (CRUD)
+
+Yönetici, sistemdeki tüm kullanıcıları (diğer Yöneticiler dahil, Alt-Yöneticiler, Öğrenciler) oluşturabilmeli, listeleyebilmeli, güncelleyebilmeli ve silebilmelidir (CRUD).
+
+Yönetici, bir Öğrenci kullanıcısını bir Alt-Yönetici kullanıcısına atayabilmelidir (mentor ataması).
+
+Yönetici, tüm sistem ayarlarını (örn: duyuru kategorileri, toplantı kategorileri) yönetebilmelidir.
+
+Yönetici, Alt-Yönetici kullanıcılarını oluştururken veya güncellerken bir "WhatsApp Numarası" (uluslararası formatta, ör: +905xxxxxxxxx) ekleyebilmelidir. Bu numara "Mesajlar Modülü" için kullanılacaktır.
+
+FG-3.1.3: Alt-Yönetici Yetkileri (Kısıtlı Erişim)
+
+Alt-Yönetici, sadece kendisine atanmış olan öğrencilerin listesini görüntüleyebilmelidir.
+
+Alt-Yönetici, kendisine atanmış öğrencilerin profillerini, ders programlarını, toplantılarını ve analizlerini görüntüleyebilmeli ve yönetebilmelidir (ilgili modüllerde detaylandırılmıştır).
+
+Alt-Yönetici, başka bir Alt-Yöneticiye atanmış öğrencilerin hiçbir verisini görüntüleyememelidir.
+
+FG-3.1.4: Öğrenci Yetkileri (Sınırlı Erişim)
+
+Öğrenci, sadece kendi profilini, ders programını, kendisine gönderilen duyuruları, toplantılarını ve analizlerini görüntüleyebilmelidir.
+
+Öğrenci, başka bir öğrencinin verilerini kesinlikle görüntüleyememelidir.
+
+3.2 Profilim Modülü
+FG-3.2.1: Profil Bilgilerini Görüntüleme
+
+Tüm kullanıcılar, "Profilim" sayfasından kendi temel bilgilerini (Ad, Soyad, E-posta) görüntüleyebilmelidir.
+
+Tüm kullanıcılar, sistemdeki yetkilerini (Rol: Yönetici/Alt-Yönetici/Öğrenci) görüntüleyebilmelidir.
+
+Alt-Yönetici ve Öğrenci kullanıcıları, YKS alanlarını (Alan: Sayısal, Sözel, Eşit Ağırlık, Dil) profilinde görüntüleyebilmelidir.
+
+Alt-Yönetici, profilinde kayıtlı olan WhatsApp numarasını görebilmelidir (ancak düzenleyememelidir, bu yetki Yöneticidedir).
+
+FG-3.2.2: Profil Bilgilerini Güncelleme
+
+Tüm kullanıcılar kendi şifrelerini değiştirebilmelidir.
+
+Tüm kullanıcılar iletişim bilgilerini (örn: e-posta, telefon) güncelleyebilmelidir.
+
+Yönetici, tüm kullanıcıların alanını ve diğer bilgilerini güncelleyebilmelidir.
+
+FG-3.2.3: Atanmış Kullanıcıları Görme
+
+Öğrenci, profil sayfasında kendisine atanmış olan Alt-Yöneticiyi (mentorunu) görebilmelidir.
+
+Alt-Yönetici, profil sayfasında kendisine atanmış olan öğrencilerin bir listesini görebilmelidir.
+
+3.3 Duyurular Modülü
+FG-3.3.1: Kategori Yönetimi
+
+Yönetici, duyuru kategorilerini (örn: "Genel", "Toplantı Duyurusu", "Gezi Duyurusu", "Sınav Bilgisi") oluşturabilmeli, güncelleyebilmeli ve silebilmelidir.
+
+FG-3.3.2: Duyuru Oluşturma (Yönetici / Alt-Yönetici)
+
+Yönetici ve Alt-Yönetici, yeni bir duyuru oluşturabilmelidir.
+
+Duyuru oluştururken, zorunlu olarak bir başlık, içerik (metin editörü destekli) ve önceden tanımlanmış kategorilerden biri seçilmelidir.
+
+Yönetici, duyurunun hedef kitlesini (Tüm Öğrenciler, Belirli Bir Alandaki Öğrenciler) seçebilmelidir.
+
+Alt-Yönetici, duyurunun hedef kitlesini (Tüm Öğrenciler, Sadece Kendi Öğrencileri, Kendi Öğrencileri İçinden Seçilenler) seçebilmelidir.
+
+FG-3.3.3: Duyuru Görüntüleme (Öğrenci)
+
+Öğrenci, panel ana sayfasında veya "Duyurular" modülünde, kendisine hedeflenmiş duyuruları kronolojik sırayla (en yeniden eskiye) listeleyebilmelidir.
+
+Öğrenci, duyuruları kategorilerine göre filtreleyebilmelidir.
+
+Okunmamış duyurular görsel olarak (örn: bold yazı tipi veya ikon) belirtilmelidir.
+
+3.4 Ders Programı Yönetimi Modülü
+FG-3.4.1: Haftalık Takvim Görünümü
+
+Öğrenci ve o öğrenciye atanmış Alt-Yönetici (ve Yönetici), öğrencinin ders programını 7 günlük (haftalık) bir takvim arayüzünde görüntüleyebilmelidir.
+
+FG-3.4.2: Görev Ekleme/Düzenleme (Eş Zamanlı)
+
+Öğrenci, kendi haftalık takvimine yeni görevler (örn: "TYT Matematik - 100 Soru", "AYT Fizik - Konu Tekrarı") ekleyebilmelidir.
+
+Alt-Yönetici, sadece kendisine atanmış öğrencinin takvimine yeni görevler ekleyebilmeli veya mevcut görevleri düzenleyebilmelidir.
+
+Bir kullanıcının (örn: Alt-Yönetici) yaptığı değişiklik, diğer kullanıcı (örn: Öğrenci) tarafından sayfayı yenilediğinde (veya eş zamanlı olarak) görülebilmelidir.
+
+FG-3.4.3: Görev Tamamlama Durumu
+
+Öğrenci, takvimdeki her bir görevi "Tamamlandı" veya "Tamamlanmadı" olarak işaretleyebilmelidir.
+
+Tamamlanan görevler takvimde görsel olarak (örn: üstü çizili veya farklı bir renkte) belirtilmelidir.
+
+FG-3.4.4: Veritabanı Kaydı
+
+Eklenen her görev (Görev Adı, Tarihi, Atayan Kişi (Öğrenci/Alt-Yönetici), Durumu) ve bu görevin tamamlanma durumu (Tarih/Saat bilgisiyle) veritabanında ayrıntılı olarak kaydedilmelidir (Analiz Modülü için gereklidir).
+
+3.5 Toplantı Modülü
+FG-3.5.1: Toplantı Kategori Yönetimi
+
+Yönetici, toplantı kategorilerini (örn: "Analiz Toplantısı", "Motivasyon Toplantısı", "Veli Toplantısı", "Gezi Toplantısı") tanımlayabilmelidir.
+
+FG-3.5.2: Toplantı Tanımlama (Yönetici / Alt-Yönetici)
+
+Yönetici ve Alt-Yönetici, yeni bir toplantı oluşturabilmelidir.
+
+Toplantı oluştururken; bir kategori seçilmeli, toplantı tarihi ve saati belirlenmeli ve bir açıklama girilmelidir.
+
+Toplantının hedefi (katılımcılar) seçilmelidir:
+
+Yönetici: Sistemdeki herhangi bir öğrenciyi veya öğrenci grubunu seçebilmelidir.
+
+Alt-Yönetici: Sadece kendi öğrencileri arasından bir öğrenciyi veya öğrenci grubunu seçebilmelidir.
+
+FG-3.5.3: Toplantı Görüntüleme (Öğrenci)
+
+Öğrenci, kendisine atanmış toplantıları özel bir "Toplantılarım" takviminde (veya Ders Programı takvimi ile birleştirilmiş olarak) görebilmelidir.
+
+Toplantı detayında (kimin oluşturduğu, kategorisi, saati) bilgileri görmelidir.
+
+FG-3.5.4: Toplantı Katılım Durumu (Analiz için Bağımlılık)
+
+Alt-Yönetici/Yönetici, gerçekleşen bir toplantı için katılımcı öğrencileri "Katıldı" veya "Katılmadı" olarak işaretleyebilmelidir (Bu, Analiz Modülü'nün FG-3.7.1.2 gereksinimi için zorunludur).
+
+3.6 Sınavlarım Modülü
+Bu modül, öğrencilerin TYT ve AYT deneme sınavı sonuçlarını detaylı bir şekilde takip etmeleri ve analiz etmeleri için tasarlanmıştır.
+
+FG-3.6.1: Sınav Sonucu Girişi (Detaylı)
+
+Öğrenci veya Alt-Yönetici, öğrenci adına sisteme yeni bir deneme sınavı sonucu ekleyebilmelidir.
+
+FG-3.6.1.1: Sınav Ana Bilgi Girişi: Sınav eklenirken "Sınav Adı" (örn: "AYT Deneme Sınavı #5"), "Tarih" ve "Sınav Tipi" (TYT/AYT) bilgileri girilmelidir.
+
+FG-3.6.1.2: Konu Bazlı Veri Girişi: (Detaylı analiz için zorunlu) Kullanıcı, her ders için (örn: Matematik) o dersteki konuları (örn: "Türev", "Limit") ve o konudan çıkan soru sayısını (örn: 4 Soru) ve bu soruların sonucunu (örn: 3 Doğru, 1 Yanlış, 0 Boş) girebilmelidir.
+
+FG-3.6.1.3: Otomatik Hesaplama: Sistem, konu bazlı girilen D/Y/B verilerine dayanarak her bir dersin toplam D/Y/B ve Net sayısını ve sınavın genel Toplam D/Y/B ve Toplam Net puanını otomatik olarak hesaplamalı ve veritabanına kaydetmelidir.
+
+FG-3.6.1.4: Cevap Anahtarı Yükleme (İsteğe Bağlı): Yönetici/Alt-Yönetici, sınavı tanımlarken ilgili sınavın cevap anahtarını (örn: PDF dosyası) sisteme yükleyebilmelidir.
+
+FG-3.6.2: "Sınavlarım" Ana Sayfası (Genel Bakış)
+
+Öğrenci (ve o öğrenciye bakan Alt-Yönetici/Yönetici) bu sayfayı görüntüleyebilmelidir.
+
+FG-3.6.2.1: Filtreleme: Kullanıcı, verileri Sınav Tipi ("Tümü", "TYT", "AYT") ve Zaman Aralığı ("Son 6 Ay", "Yıllık" vb.) bazında filtreleyebilmelidir.
+
+FG-3.6.2.2: Özet Kartları (KPIs): Filtrelenen verilere göre hesaplanan "Genel Ortalama" (Net), "Toplam Sınav" (Sayısı) ve "En Yüksek Net" değerleri özet kartlarda gösterilmelidir.
+
+FG-3.6.2.3: Net Sayısı Gelişimi: Filtrelenen zaman aralığına göre (örn: aylık) net ortalamalarının değişimini gösteren bir çubuk (bar) grafik gösterilmelidir. O anki net sayısı ve bir önceki döneme göre yüzdelik artış/azalış (örn: +5.2%) gösterilmelidir.
+
+FG-3.6.2.4: Genel Soru Dağılımı: Filtrelenen tüm sınavlardaki toplam soruların ortalama "Doğru", "Yanlış", "Boş" oranını gösteren bir halka (donut) grafik gösterilmelidir.
+
+FG-3.6.2.5: Sınav Geçmişi Listesi: Filtrelenen sınavlar, en yeniden eskiye doğru bir listede "Sınav Adı", "Tarih", "Doğru", "Yanlış", "Net" sütunlarıyla gösterilmelidir. Bu listedeki her bir sınav tıklanabilir olmalıdır.
+
+FG-3.6.3: Sınav Detay Sayfası
+
+Kullanıcı, Sınav Geçmişi listesinden (FG-3.6.2.5) bir sınava tıkladığında bu sayfaya yönlendirilmelidir.
+
+FG-3.6.3.1: Sınav Özeti: İlgili sınava ait "Toplam Net", "Toplam Doğru" ve "Toplam Yanlış" sayıları özet kartlarda gösterilmelidir.
+
+FG-3.6.3.2: Cevapları Görüntüleme: Eğer bu sınav için bir cevap anahtarı (FG-3.6.1.4) yüklendiyse, "Cevapları Görüntüle" butonu aktif olmalı ve tıklandığında ilgili dosyayı açmalıdır.
+
+FG-3.6.3.3: Derslere Göre Net Dağılımı: O sınavdaki her bir dersin (Mat, Fiz, Kim...) netlerini gösteren bir çubuk (bar) grafik gösterilmelidir.
+
+FG-3.6.3.4: Ders Analizi (Tablar): Kullanıcı, dersler arasında (Matematik, Fizik, Kimya vb.) geçiş yapabileceği sekmelere (tab) sahip olmalıdır.
+
+FG-3.6.3.5: Ders Bazlı Soru Dağılımı: Aktif olan ders sekmesinde, o derse ait D/Y/B sayılarını ve Net'i gösteren bir halka (donut) grafik bulunmalıdır.
+
+FG-3.6.3.6: Konu Dağılımı Listesi: Aktif olan ders sekmesinde, o dersteki konuların listesi, her konudan çıkan toplam soru sayısı ve öğrencinin o konudaki D/Y sonucu (örn: "Türev - 4 Soru -> 3D 1Y") gösterilmelidir.
+
+3.7 Analiz Modülü
+Bu modül, öğrencinin akademik olmayan performansını (görev tamamlama ve toplantı katılımı) analiz eder. Sınav analizleri 3.6 Sınavlarım Modülü'ne taşınmıştır.
+
+FG-3.7.1: Analiz Gösterge Paneli (Dashboard)
+
+Öğrenci (ve o öğrenciye bakan Alt-Yönetici/Yönetici), öğrencinin görev ve toplantı performansını gösteren bir analiz paneli görmelidir.
+
+FG-3.7.1.1: Filtreleme
+
+Kullanıcı, paneldeki tüm verileri zamana bağlı olarak (Haftalık, Aylık, 3 Aylık, Yıllık) filtreleyebilmelidir.
+
+FG-3.7.1.2: Veri Göstergeleri (Widget'lar)
+
+Ders Programı Gidişatı: Seçilen zaman filtresine göre;
+
+Atanan Toplam Görev Sayısı.
+
+Tamamlanan Görev Sayısı.
+
+Başarı Yüzdesi (Tamamlanan / Atanan) (Grafiksel - örn: Pie Chart).
+
+Toplantı Katılımı: Seçilen zaman filtresine göre;
+
+Planlanan Toplantı Sayısı.
+
+Katıldığı Toplantı Sayısı (Bkz: FG-3.5.4).
+
+Katılım Oranı (Yüzdelik).
+
+3.8 Mesajlar Modülü
+Bu modül, öğrencilerin mentörlerine (Alt-Yöneticiler) WhatsApp üzerinden hızlıca mesaj göndermesini sağlar.
+
+FG-3.8.1: Mentor Listeleme (Öğrenci)
+
+Öğrenci, "Mesajlar" modülüne girdiğinde, sistemdeki tüm Alt-Yöneticilerin (Mentorların) bir listesini görmelidir.
+
+Her mentorun adının (ve/veya unvanının) altında bir metin giriş alanı (text input) ve bir "Gönder" butonu bulunmalıdır.
+
+FG-3.8.2: Mesaj Gönderme (WhatsApp Entegrasyonu)
+
+Öğrenci, listedeki belirli bir mentor için ayrılmış metin alanına bir mesaj yazdığında ve "Gönder" butonuna tıkladığında, sistem bir eylem tetiklemelidir.
+
+Bu eylem, ilgili mentorun profiline (FG-3.1.2'de tanımlanan) kayıtlı WhatsApp numarasına, metin alanındaki mesajı içeren bir WhatsApp wa.me linkini (örn: https://wa.me/905xxxxxxxxx?text=GirilenMesaj) yeni bir tarayıcı sekmesinde açmalıdır.
+
+FG-3.8.3: Sınırlama
+
+Sistem, mesajı doğrudan WhatsApp üzerinden göndermez. Kullanıcının (öğrencinin) açılan WhatsApp arayüzünde (web, desktop veya mobil) gönderim işlemini son kez onaylaması/göndermesi gerekir.
+
+Sadece Alt-Yönetici (Mentor) rolündeki kullanıcılar bu listede görünmelidir.
+
+3.9 AI Destekli Öneriler Modülü (Yeni)
+Bu modül, öğrencinin okuduğu veya okumayı planladığı kitapların, mevcut bir Makine Öğrenmesi (ML) modeli aracılığıyla popülerliğini analiz ederek, bu kitapların YKS sınav sorularına (örn: paragraf, felsefe) potansiyel katkısını değerlendirmeyi amaçlar.
+
+FG-3.9.1: Modül Erişimi
+
+FG-3.9.1.1: Öğrenci rolündeki kullanıcı, "AI Destekli Öneriler" modülüne erişebilmelidir.
+
+FG-3.9.1.2: Yönetici ve Alt-Yönetici, atandıkları öğrencilerin bu modülü nasıl kullandığını veya onlar adına sorgulama yapabilme yetkisini (Bu gereksinim V1.2'de detaylandırılabilir, V1.1 için öncelik Öğrenci rolündedir) görebilmelidir.
+
+FG-3.9.2: Kitap Parametre Girişi
+
+FG-3.9.2.1: Sistem, öğrencinin analiz etmek istediği kitaba ait, ML modelinin tahminleme için ihtiyaç duyduğu parametreleri (örn: Yayınevi, Yazar, Sayfa Sayısı, Kategori vb.) girebileceği bir form arayüzü sunmalıdır.
+
+FG-3.9.3: ML Modeli Entegrasyonu (API Çağrısı)
+
+FG-3.9.3.1: "Analiz Et" butonuna tıklandığında, formdan alınan parametreler, 2.2'de tanımlanan 'Kitap Satış Tahmin Modeli' API'sine güvenli bir istek olarak gönderilmelidir.
+
+FG-3.9.3.2: Sistem, API'den dönecek tahmini "satış adedi" (sayısal) değerini almalıdır.
+
+FG-3.9.3.3: API yanıt vermezse veya bir hata dönerse (örn: 4xx, 5xx), sistem kullanıcıya "Analiz yapılamadı, lütfen daha sonra tekrar deneyin." gibi açıklayıcı bir hata mesajı göstermelidir.
+
+FG-3.9.4: Popülerlik Kategorizasyonu
+
+FG-3.9.4.1: Sistem, ML modelinden gelen tahmini "satış adedi" değerini, önceden tanımlanmış iş kurallarına göre kategorize etmelidir.
+
+Örnek Kural 1: 0-10 satış = "Düşük Popüler"
+
+Örnek Kural 2: 11-20 satış = "Orta Popüler"
+
+Örnek Kural 3: 21+ satış = "Çok Popüler"
+
+FG-3.9.4.2: Bu popülerlik kategorisi eşik değerleri (örn: 10, 20), Yönetici panelinden ayarlanabilir (konfigüre edilebilir) olmalıdır.
+
+FG-3.9.5: Sonuç Gösterimi ve Yorumlama
+
+FG-3.9.5.1: Sistem, öğrenciye analiz sonucunda hesaplanan popülerlik kategorisini (örn: "Çok Popüler") net bir şekilde göstermelidir.
+
+FG-3.9.5.2: Sistem, bu kategorinin YKS hazırlığı açısından anlamını açıklayan dinamik bir yorum metni göstermelidir.
+
+Örnek (Çok Popüler için): "Bu kitap yüksek popülerliğe sahiptir. Popüler kitapların içerikleri, YKS Türkçe paragraf veya Felsefe grubu sorularında potansiyel kaynak olarak kullanılabilmektedir. Bu kitabı okumanız, sınavda karşılaşabileceğiniz sorulara aşinalık kazanmanıza yardımcı olabilir."
+
+Örnek (Düşük Popüler için): "Bu kitap düşük popülerliğe sahiptir. Sınav sorularında doğrudan kaynak olarak kullanılma olasılığı düşük olsa da, okuma hızınızı ve anlama becerinizi geliştirmek için faydalıdır."
+
+4. Fonksiyonel Olmayan Gereksinimler
+FOG-4.1: Performans
+Tüm sayfa yüklemeleri (özellikle takvim ve analiz paneli) 3 saniye altında gerçekleşmelidir.
+
+Sistem, eş zamanlı olarak en az 100 kullanıcıyı (örn: 10 Danışman, 90 Öğrenci) yavaşlama olmadan desteklemelidir.
+
+FOG-4.2: Güvenlik
+Rol Bazlı Erişim Kontrolü (RBAC) katı bir şekilde uygulanmalıdır. Hiçbir kullanıcı (rolü ne olursa olsun) yetkisi olmayan bir veriyi (özellikle başka bir öğrencinin verisini) görememelidir.
+
+Tüm şifreler veritabanında "hash"lenerek saklanmalıdır.
+
+Sistem, temel web zafiyetlerine (XSS, SQL Injection) karşı korunmalıdır.
+
+FOG-4.3: Kullanılabilirlik
+Web arayüzü, modern, sade ve sezgisel olmalıdır.
+
+Arayüz, mobil cihaz tarayıcılarında (responsive design) düzgün görüntülenmeli ve kullanılabilir olmalıdır.
+
+FOG-4.4: Genişletilebilirlik ve Bakım
+Yazılım mimarisi, gelecekte yeni modüllerin (örn: Ödev Modülü) sisteme kolayca entegre edilmesine olanak tanımalıdır (örn: Modüler Monolit veya Mikroservis mimarisi).
+
+Kod, temiz, okunabilir ve belgelenmiş olmalıdır.
+
+FOG-4.5: Birlikte Çalışabilirlik (API)
+FOG-4.5.1: Gelecekteki mobil uygulama entegrasyonu için sistemin tüm temel fonksiyonları (FG-3.1'den FG-3.9'a kadar) güvenli bir RESTful API aracılığıyla erişilebilir olmalıdır.
+
+FOG-4.5.2 (Yeni): Sistem, "AI Destekli Öneriler Modülü" (FG-3.9) için harici Makine Öğrenmesi Model API'sini (bkz: 2.2) verimli bir şekilde tüketebilmelidir. Bu API çağrısının yanıt süresi, FOG-4.1'deki genel sayfa performans hedefini (3 saniye) aşmamalıdır.
