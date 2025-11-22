@@ -3,6 +3,8 @@
 
 Bu rehber, Notion üzerinden size atanan görevleri tamamlarken izlemeniz gereken standart Git akışını özetlemektedir.
 
+TaskBoard : https://disco-nerve-a2b.notion.site/msms?v=5bb286513c6e4d28b0dfa3792c50d108
+
 ## I. Temel Kurallar
 
 1.  **Ana Dal (main):** Sadece bitmiş uygulamanın son halini içerir. **Asla doğrudan push yapmayın.**
