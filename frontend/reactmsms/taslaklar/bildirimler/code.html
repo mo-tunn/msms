@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Öğrenci Paneli - Bildirimler</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+<div class="flex h-full min-h-screen">
+<aside class="flex w-64 flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark p-4">
+<div class="flex h-full min-h-[700px] flex-col justify-between">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-10" data-alt="System Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmSKrP-s9CE8xBH2lz5_tta0aEDZpXuXZ2_osPySv6-kZyiffZLctKrOJKthvQW-T8DnJXaGjGCJJ989Au_B_Ib8dcgR3xkyJ30cdmtJF53ler5uQF9-cHY3ST2AIMKFLVmzNunjzjPlDEDcTaG4e-eFvXoWS0C32BJikmOTPLclzOiKhCBt1-g_2fyYpTK6Pgwc-tskW3I9i_Z0SN4ncTInfk4w7nTEtIVDtz0ZHSmeI2XANLEeUHJsZfwnCRx8k2U203dTYQC01W");'></div>
+<h1 class="text-[#111418] dark:text-gray-100 text-lg font-bold leading-normal">Sistem Adı</h1>
+</div>
+<hr class="border-gray-200 dark:border-gray-800 my-2"/>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-sm font-medium leading-normal">Ana Sayfa</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-sm font-medium leading-normal">Ders Programı</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Analizler</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-sm font-medium leading-normal">Toplantılar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">mail</span>
+<p class="text-sm font-medium leading-normal">Mesajlar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">rocket_launch</span>
+<p class="text-sm font-medium leading-normal">Kunduza Git</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">help</span>
+<p class="text-sm font-medium leading-normal">Yardım</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-red-500/10 hover:text-red-500 dark:hover:bg-red-500/20" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Çıkış Yap</p>
+</a>
+</div>
+</div>
+</aside>
+<main class="flex-1">
+<div class="flex flex-col">
+<header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark px-6">
+<div></div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 focus:outline-none focus:ring-2 focus:ring-primary/50 dark:focus:ring-primary/60 size-10">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="relative flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 focus:outline-none focus:ring-2 focus:ring-primary/50 dark:focus:ring-primary/60 size-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<div class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-2 ring-white dark:ring-background-dark"></div>
+</button>
+<button class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPLBJLqEnu0DcdM0sCJw3duMAXxnoodY-zBu6eD2i1XCrlVmVCqfdR25blQmGvEqyEpCYUu7uhms2b2ll7A776QdS7CvqDv1eP9r9Ejf5MfTpsAr42ry7WIrNZ1MJ8w-8yd4UUPCazEh1ZQYmFGk46qy1plntiF3UYmXHa58-1IemAB8BwMTmS50-w5VohnXBp09hsXBfnNvYWZ6-dIWvKMytZYpH9ikNo9SuK773kPNsC9SpTWZYpBJSVUo8S1sEr0Ffgl8x-auF5");'></div>
+<div class="flex flex-col items-start">
+<h2 class="text-[#111418] dark:text-gray-100 text-sm font-semibold leading-normal">Elif Yılmaz</h2>
+<p class="text-[#617589] dark:text-gray-400 text-xs font-normal leading-normal">Öğrenci</p>
+</div>
+</button>
+</div>
+</header>
+<div class="mx-auto w-full max-w-5xl py-8 px-4 sm:px-6 lg:px-8">
+<div class="flex flex-wrap justify-between items-center gap-3 pb-4">
+<h1 class="text-[#111418] dark:text-gray-100 text-3xl font-black tracking-tight">Bildirimler</h1>
+</div>
+<div class="flex flex-col sm:flex-row justify-between items-center gap-4 py-3">
+<div class="w-full sm:w-auto">
+<div class="flex h-10 w-full items-center justify-center rounded-lg bg-gray-200/50 dark:bg-gray-800/50 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-3 sm:px-4 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary dark:has-[:checked]:bg-gray-900 text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal transition-colors duration-200">
+<span class="truncate">Tümü</span>
+<input checked="" class="invisible w-0" name="notification_filter" type="radio" value="Tümü"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-3 sm:px-4 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary dark:has-[:checked]:bg-gray-900 text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal transition-colors duration-200">
+<span class="truncate">Akademik</span>
+<input class="invisible w-0" name="notification_filter" type="radio" value="Akademik"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-3 sm:px-4 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary dark:has-[:checked]:bg-gray-900 text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal transition-colors duration-200">
+<span class="truncate">Duyurular</span>
+<input class="invisible w-0" name="notification_filter" type="radio" value="Duyurular"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-3 sm:px-4 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary dark:has-[:checked]:bg-gray-900 text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal transition-colors duration-200">
+<span class="truncate">Mesajlar</span>
+<input class="invisible w-0" name="notification_filter" type="radio" value="Mesajlar"/>
+</label>
+</div>
+</div>
+<div class="flex w-full sm:w-auto gap-2">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50 dark:focus:ring-primary/60 text-sm" placeholder="Bildirimlerde ara..." type="search"/>
+</div>
+<button class="flex items-center justify-center h-10 px-4 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary text-sm font-medium hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"> Hepsini Okundu İşaretle </button>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-2">
+<div class="flex items-center gap-4 bg-white dark:bg-gray-900/50 p-4 rounded-xl border border-transparent hover:border-primary/50 dark:hover:border-primary/60 transition-colors duration-200 cursor-pointer relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1.5 bg-primary rounded-r-full"></div>
+<div class="text-green-500 flex items-center justify-center rounded-lg bg-green-500/10 dark:bg-green-500/20 shrink-0 size-12">
+<span class="material-symbols-outlined text-2xl">school</span>
+</div>
+<div class="flex-1">
+<p class="text-[#111418] dark:text-gray-100 text-base font-semibold leading-normal line-clamp-1">Psikolojiye Giriş dersi için yeni not girildi.</p>
+<p class="text-green-600 dark:text-green-400 text-sm font-normal leading-normal line-clamp-2">Akademik</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">2 saat önce</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-gray-900/50 p-4 rounded-xl border border-transparent hover:border-primary/50 dark:hover:border-primary/60 transition-colors duration-200 cursor-pointer relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1.5 bg-primary rounded-r-full"></div>
+<div class="text-yellow-500 flex items-center justify-center rounded-lg bg-yellow-500/10 dark:bg-yellow-500/20 shrink-0 size-12">
+<span class="material-symbols-outlined text-2xl">event_upcoming</span>
+</div>
+<div class="flex-1">
+<p class="text-[#111418] dark:text-gray-100 text-base font-semibold leading-normal line-clamp-1">Prof. Dr. Yılmaz ile olan toplantınıza 1 saat kaldı.</p>
+<p class="text-yellow-600 dark:text-yellow-400 text-sm font-normal leading-normal line-clamp-2">Hatırlatma</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">58 dakika önce</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-gray-900/50 p-4 rounded-xl border border-transparent hover:border-primary/50 dark:hover:border-primary/60 transition-colors duration-200 cursor-pointer opacity-70">
+<div class="text-red-500 flex items-center justify-center rounded-lg bg-red-500/10 dark:bg-red-500/20 shrink-0 size-12">
+<span class="material-symbols-outlined text-2xl">campaign</span>
+</div>
+<div class="flex-1">
+<p class="text-[#111418] dark:text-gray-100 text-base font-medium leading-normal line-clamp-1">25 Aralık'ta üniversite genelinde bakım çalışması planlanmıştır.</p>
+<p class="text-red-600 dark:text-red-400 text-sm font-normal leading-normal line-clamp-2">Duyuru</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">1 gün önce</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-gray-900/50 p-4 rounded-xl border border-transparent hover:border-primary/50 dark:hover:border-primary/60 transition-colors duration-200 cursor-pointer opacity-70">
+<div class="text-blue-500 flex items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-500/20 shrink-0 size-12">
+<span class="material-symbols-outlined text-2xl">chat</span>
+</div>
+<div class="flex-1">
+<p class="text-[#111418] dark:text-gray-100 text-base font-medium leading-normal line-clamp-1">Ayşe Kaya'dan yeni bir mesajınız var.</p>
+<p class="text-blue-600 dark:text-blue-400 text-sm font-normal leading-normal line-clamp-2">Mesaj</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">3 gün önce</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

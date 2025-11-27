@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Panel - Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="flex h-screen w-full">
+<aside class="flex h-full w-64 flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark">
+<div class="flex h-16 shrink-0 items-center gap-3 px-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover size-8" data-alt="System Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDpcMTC6hEurDSCFGrZwaginYOSF59AYcyC70QxdrxZJm0QS_grBACTytqfRNaEHRhhezLIXbtR2gDP1fPVz5MFOoYGPXONTN9Fu9hLQmZRRXXezm5ptMFc0tiI3cKGNiB_w_PmVY07VvFTOc24OzK1G6rHclqXkpcOdIK3gKJMKvR-NH_LXZq4oBLBf6ilDhazoCgHpRmmaEVUZk5XQ_CpEkZzylFXOmVRkQt2eLU73DjssQWQN2YWjePXBGUPnXtJ05TkeWvBCL3n");'></div>
+<h1 class="text-gray-900 dark:text-white text-lg font-bold leading-normal">YKS Mentor</h1>
+</div>
+<div class="h-px w-full bg-gray-200 dark:bg-gray-800"></div>
+<div class="flex flex-col gap-1 p-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">home</span>
+<p class="text-sm font-medium leading-normal">Ana Sayfa</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">calendar_month</span>
+<p class="text-sm font-medium leading-normal">Ders Programı</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Analizler</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">groups</span>
+<p class="text-sm font-medium leading-normal">Toplantılar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary" href="#">
+<span class="material-symbols-outlined !font-bold">mail</span>
+<p class="text-sm font-medium leading-normal">Mesajlar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">rocket_launch</span>
+<p class="text-sm font-medium leading-normal">Kunduza Git</p>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-1 p-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">help</span>
+<p class="text-sm font-medium leading-normal">Yardım</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">logout</span>
+<p class="text-sm font-medium leading-normal">Çıkış Yap</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full">
+<header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-6">
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Mentorlarınız</h2>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full size-10 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="relative flex items-center justify-center rounded-full size-10 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10">
+<span class="material-symbols-outlined">notifications</span>
+<div class="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500"></div>
+</button>
+<div class="h-8 w-px bg-gray-200 dark:bg-gray-700"></div>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBwd3Zbo0Zs0XB81Zz8aL8646veCIWWpgIKw2cvv4boHMo9fkb8vTTNuqYGg-kjWxZDxkollq2GA0vRUPRlR3emOqXcFCuyMXxvSG9a-yj_6KV97SXC_tQXMLBGX3HF6eKxWZCD_Wh6m3w6su8Fvq6RcuZ2dgK-sStL1K_KNwu5jVXvxlqRf9-lhCYIPaJjnUZdTeF3AZPEHp1Nhjs0E2lPuxccs5b4nGoX1A7O4lkguk2RV8WusLexrgyXebnR3GI9ASspNNVv7ZHt");'></div>
+<div class="flex flex-col">
+<p class="text-gray-900 dark:text-white text-sm font-semibold leading-normal">Zeynep Yılmaz</p>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-normal leading-normal">Öğrenci</p>
+</div>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-6 lg:p-8">
+<div class="max-w-4xl mx-auto">
+<div class="space-y-4">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 flex-shrink-0" data-alt="Profile picture of Prof. Dr. Ahmet Yılmaz" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCIAydlRNQBr8JszxTdl0G56FqYeSVuWTSVZyU8eny7E2qcM4EfUfSc9wGdS2aGIbXXUZgDmK5qDbE0Q4GEjTXjC96iQLdaY9IKjt5YzrOjA8rv2Mz0rvE6wiim5KG-qhEm9OzOtegdiXctBhrxD5wJfLMPqhMqlHcPEb0-GyupPNdUSt8QjSksIct-FNmFuKM5RMwvNCuWSQc5w60HEBNulxZrnav4hPdvhfC-A44b3I1q3OUlJPPFfhjVflp-sCiw9K0C2Hddiwz0");'></div>
+<div class="flex-1">
+<h3 class="text-base font-semibold text-gray-900 dark:text-white">Prof. Dr. Ahmet Yılmaz</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400">Computer Science Mentor</p>
+</div>
+<a class="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition-colors w-full sm:w-auto" href="#">
+<svg class="h-5 w-5" fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.204-1.634a11.86 11.86 0 005.785 1.605h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+<span>WhatsApp ile Bağlan</span>
+</a>
+</div>
+<div class="mt-4">
+<input class="form-input w-full rounded-lg text-sm bg-gray-50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="Hızlı mesaj gönder..." type="text"/>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 flex-shrink-0" data-alt="Profile picture of Elif Kara" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDr2QvLxWnVUjNIDL_q1ApnOJFzcP4OgN5KGMamrBEq-uPWoZbd37sL3b2I1enG5vTHAnRdcDW1Tz18tzYL0jeGRWfkXNzg8tdduMQeiCa4DIsagjs2PTCqHYn0U_48ofRoZZsPmBHPjkwZoA6PzQlKpRlG12V9ilqkNSKZ_2KptYZz93dOZSlg_9uLTfPaAEYbLcJCsU-q8kCBPF1J5SPU6U9J4vcNAyfxohsdELm4RYNbNhy1t3KPzeJhI1Q4tZfzTn6P2erYub-Q");'></div>
+<div class="flex-1">
+<h3 class="text-base font-semibold text-gray-900 dark:text-white">Doç. Dr. Elif Kara</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400">Physics Mentor</p>
+</div>
+<a class="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition-colors w-full sm:w-auto" href="#">
+<svg class="h-5 w-5" fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.204-1.634a11.86 11.86 0 005.785 1.605h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+<span>WhatsApp ile Bağlan</span>
+</a>
+</div>
+<div class="mt-4">
+<input class="form-input w-full rounded-lg text-sm bg-gray-50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="Hızlı mesaj gönder..." type="text"/>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 flex-shrink-0" data-alt="Profile picture of Mehmet Can" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDy17NwVgwO3D95Gq9k3vS2NQZDif24mHi5iqh4Z5Ox4GpFZqc021yfZhtN4ez2GV6G78kbFfqok6xwkawXzOCI6vjWkeTQsFvB2jOJ-TLVxxa7n-DxsMtXHonZ5yud2jK-VDSrUbuZry8L5SlpX1ucKhiLzdWeDnx-oWo8rWCnvqJ2e0CmDIiT1CNJGpYBxi2YSQCVbCs8u6xlKYntIW9xt9vWarkMKQW-MY4hNJFFWzzo5ByNyx6ePvhDss3SENCeJx52Mz90XrXa");'></div>
+<div class="flex-1">
+<h3 class="text-base font-semibold text-gray-900 dark:text-white">Dr. Mehmet Can</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400">Mathematics Mentor</p>
+</div>
+<a class="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition-colors w-full sm:w-auto" href="#">
+<svg class="h-5 w-5" fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.204-1.634a11.86 11.86 0 005.785 1.605h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+<span>WhatsApp ile Bağlan</span>
+</a>
+</div>
+<div class="mt-4">
+<input class="form-input w-full rounded-lg text-sm bg-gray-50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="Hızlı mesaj gönder..." type="text"/>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 flex-shrink-0" data-alt="Profile picture of Zeynep Öztürk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC1lMal8enfaset2fyfUfZ9KRdpfL1-Zadnl_k436hgkdNgt72iNR7KhJh1JmwGtlDJCKs9qepcbOOgDHUvh30f_imOYxNLkZRDGPLpfgmIgt38C7d8lp43ymmML6Jcq6ao-FaoK5YTg-ndB0TIA-KKIiC43GlhR_xLEeAVbBn3E_sPJ7OkVVlKPPECVi9aB4Nqbue8md0uL-_SpgjonSoifx8WcrN_H5-QK-QVDJx5b5G2xjth9MXtBLYvFjkkix6wjs92cS05JheI");'></div>
+<div class="flex-1">
+<h3 class="text-base font-semibold text-gray-900 dark:text-white">Ar. Gör. Zeynep Öztürk</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400">Chemistry Mentor</p>
+</div>
+<a class="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition-colors w-full sm:w-auto" href="#">
+<svg class="h-5 w-5" fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.204-1.634a11.86 11.86 0 005.785 1.605h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+<span>WhatsApp ile Bağlan</span>
+</a>
+</div>
+<div class="mt-4">
+<input class="form-input w-full rounded-lg text-sm bg-gray-50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500" placeholder="Hızlı mesaj gönder..." type="text"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

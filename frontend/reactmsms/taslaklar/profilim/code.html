@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Panel - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .toggle-checkbox:checked {
+        right: 0;
+        border-color: #137fec;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+        background-color: #137fec;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+<div class="flex min-h-screen">
+<aside class="flex w-64 flex-col gap-6 bg-white p-4 shadow-sm dark:bg-background-dark dark:border-r dark:border-gray-800">
+<div class="flex items-center gap-3 px-3 py-1">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Student panel logo with an abstract book icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCatjAReA9aiVCOR5NZ03FfONCbuoz6q_1-eb0KYijO3NYlMb_Fwjsk3-d5nTJg5acDY6SPwpA39r3CjCokmEbIpm3BUQxxKFfR7A1b3sPlkfA1f3yW1_Ru7tM-0Jbbvet5DdyamV5TgkaJpJ7jNQ1vgDMgxr-7YkvOXLCnJY8iEuzY38RxiwqzV-gbPMHXxHiSd5Lm-cq-s-YQwL3ejy-DZehoXPHIu4EGYNrYNUSZuRf45_9SL3pFcTLdn2H_EivTZb6clTdyrVxW");'></div>
+<p class="text-gray-900 dark:text-white text-base font-bold leading-normal">YKS Mentor</p>
+</div>
+<hr class="border-gray-200 dark:border-gray-800"/>
+<nav class="flex h-full flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">home</span>
+<p class="text-sm font-medium leading-normal">Ana Sayfa</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">calendar_month</span>
+<p class="text-sm font-medium leading-normal">Ders Programı</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Analizler</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">groups</span>
+<p class="text-sm font-medium leading-normal">Toplantılar</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">mail</span>
+<p class="text-sm font-medium leading-normal">Mesajlar</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">school</span>
+<p class="text-sm font-medium leading-normal">Kunduza Git</p>
+</a>
+<div class="mt-auto flex flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-primary/10 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">help</span>
+<p class="text-sm font-medium leading-normal">Yardım</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-red-500/10 hover:text-red-600 dark:text-gray-300" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Çıkış Yap</p>
+</a>
+</div>
+</nav>
+</aside>
+<div class="flex flex-1 flex-col">
+<header class="flex h-16 w-full items-center justify-end border-b border-gray-200 bg-white px-6 dark:border-gray-800 dark:bg-gray-900/50">
+<div class="flex items-center gap-4">
+<button class="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-px bg-gray-200 dark:bg-gray-800"></div>
+<div class="flex cursor-pointer items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Cem Yılmaz" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDPLb_lGb-ZulAP_MUEte4KTwmtMiz9ulp1g5iMNHDl4CvcxFwB0rXJpuRSAzJW02Y8Blmai0epmLicFB8xAKrqk2cguAcxC5FiUY_zOEhtrCu6G5f1k0Tcv60MkfYfUA9aQcn-wBKxislUn8oUt8hERZqj_4UDaa_fI-KOg-_4ZQJwU_fwnEbcBNY3QuPekhOACvPCd7tSM-sa_x0G-NOnIsUtvb3TDQIRxeDLbK5dFd_VOgH8vuTZ28B06z0tndgqy8ayrTJ5wuUE");'></div>
+<div class="flex flex-col">
+<p class="text-sm font-medium text-gray-900 dark:text-white">Cem Yılmaz</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Öğrenci</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 p-8">
+<div class="mx-auto max-w-4xl">
+<div class="flex flex-wrap justify-between gap-3 mb-6">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Profilim</p>
+</div>
+<div class="mb-8 @container">
+<div class="flex w-full flex-col gap-4 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+<div class="flex gap-4 items-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-32" data-alt="Profile picture of Cem Yılmaz" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDPLb_lGb-ZulAP_MUEte4KTwmtMiz9ulp1g5iMNHDl4CvcxFwB0rXJpuRSAzJW02Y8Blmai0epmLicFB8xAKrqk2cguAcxC5FiUY_zOEhtrCu6G5f1k0Tcv60MkfYfUA9aQcn-wBKxislUn8oUt8hERZqj_4UDaa_fI-KOg-_4ZQJwU_fwnEbcBNY3QuPekhOACvPCd7tSM-sa_x0G-NOnIsUtvb3TDQIRxeDLbK5dFd_VOgH8vuTZ28B06z0tndgqy8ayrTJ5wuUE");'></div>
+<button class="absolute bottom-1 right-1 flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+<span class="material-symbols-outlined text-base">photo_camera</span>
+</button>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Cem Yılmaz</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">YKS 2024 Adayı</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Hedef: Sayısal</p>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-8">
+<div class="bg-white dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-800">Kişisel Bilgiler</h2>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Ad</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">Cem</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Soyad</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">Yılmaz</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Doğum Tarihi</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">01/01/2006</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">TC Kimlik Numarası</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">************</p>
+</div>
+</div>
+<p class="text-gray-500 dark:text-gray-400 text-xs mt-4">Bu bilgiler resmi kayıtlardan alınmıştır ve düzenlenemez.</p>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex justify-between items-center px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-800">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Akademik Bilgiler</h2>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-9 px-4 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">edit</span>
+<span class="truncate">Düzenle</span>
+</button>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Okul</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">İstanbul Atatürk Fen Lisesi</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Sınıf</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">12. Sınıf</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Alan</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">Sayısal</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Okul Başarı Puanı (OBP)</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">92.50 / 100</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">TYT Hedef Puan</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">450</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">AYT Hedef Puan</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">480</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex justify-between items-center px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-800">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Eğitim ve Kariyer Planlaması</h2>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-9 px-4 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">edit</span>
+<span class="truncate">Düzenle</span>
+</button>
+</div>
+<div class="p-6 space-y-6">
+<div>
+<h3 class="text-gray-700 dark:text-gray-300 font-semibold mb-3">YKS Bölüm Tercihleri ve Potansiyel Programlar</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Alan (Bölüm)</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">Sayısal</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1">Tercih Edilen Üniversite Tipi</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">Devlet Üniversitesi</p>
+</div>
+<div class="md:col-span-2">
+<label class="text-gray-500 dark:text-gray-400 block mb-1">İlgilenilen Programlar</label>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">Yazılım Mühendisliği</span>
+<span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">Yapay Zeka Mühendisliği</span>
+<span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">Veri Bilimi</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-gray-700 dark:text-gray-300 font-semibold mb-3 flex items-center gap-2"> Üniversite İstek Listesi <span class="material-symbols-outlined text-base text-gray-500">school</span>
+</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 font-medium">Boğaziçi Üniversitesi - Bilgisayar Müh.</p>
+<button class="text-red-500 hover:text-red-600 transition-colors">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 font-medium">ODTÜ - Yazılım Müh.</p>
+<button class="text-red-500 hover:text-red-600 transition-colors">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+<button class="flex items-center gap-2 text-primary hover:underline text-sm font-medium mt-2">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Üniversite Ekle</span>
+</button>
+</div>
+</div>
+<div>
+<h3 class="text-gray-700 dark:text-gray-300 font-semibold mb-3 flex items-center gap-2"> Kariyer Yolu Keşfedici <span class="material-symbols-outlined text-base text-gray-500">work</span>
+</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 font-medium">Yazılım Geliştirici - AI/ML Uzmanlığı</p>
+<button class="text-red-500 hover:text-red-600 transition-colors">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 font-medium">Veri Analisti - Finans Sektörü</p>
+<button class="text-red-500 hover:text-red-600 transition-colors">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+<button class="flex items-center gap-2 text-primary hover:underline text-sm font-medium mt-2">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Kariyer Yolu Ekle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex justify-between items-center px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-800">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">İletişim ve Tercihler</h2>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-9 px-4 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">edit</span>
+<span class="truncate">Düzenle</span>
+</button>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1 text-sm">E-posta</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">cem.yilmaz@email.com</p>
+</div>
+<div>
+<label class="text-gray-500 dark:text-gray-400 block mb-1 text-sm">Telefon Numarası</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">+90 555 123 4567</p>
+</div>
+<div class="md:col-span-2">
+<label class="text-gray-500 dark:text-gray-400 block mb-1 text-sm">Adres</label>
+<p class="text-gray-800 dark:text-gray-200 font-medium">Örnek Mah. Atatürk Cad. No:123, 34000, İstanbul</p>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+<h3 class="text-gray-700 dark:text-gray-300 font-semibold mb-4">Bildirim Tercihleri</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<label class="text-gray-800 dark:text-gray-200 font-medium" for="email-notifications">E-posta bildirimleri al</label>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="email-notifications" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="email-notifications"></label>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<label class="text-gray-800 dark:text-gray-200 font-medium" for="sms-notifications">SMS uyarıları al</label>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="sms-notifications" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="sms-notifications"></label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+
+</body></html>

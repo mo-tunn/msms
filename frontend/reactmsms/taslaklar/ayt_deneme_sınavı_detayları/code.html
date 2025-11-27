@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AYT Deneme Sınavı Detayları</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "success": "#28a745",
+                        "error": "#dc3545",
+                        "neutral": "#6c757d"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full">
+<aside class="flex-col w-64 bg-white dark:bg-background-dark dark:border-r dark:border-gray-700 hidden lg:flex">
+<div class="flex flex-col h-full p-4">
+<div class="flex items-center gap-3 p-2 mb-4">
+<span class="material-symbols-outlined text-primary text-4xl">school</span>
+<h1 class="text-[#111418] dark:text-gray-200 text-xl font-bold leading-normal">Sistem Adı</h1>
+</div>
+<hr class="border-gray-200 dark:border-gray-700 my-2"/>
+<nav class="flex flex-col gap-1 flex-grow">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">home</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Ana Sayfa</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">calendar_month</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Ders Programı</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 bg-primary/10 dark:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined text-primary font-bold">analytics</span>
+<p class="text-primary text-sm font-bold leading-normal">Analizler</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">groups</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Toplantılar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">chat</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Mesajlar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">school</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Kunduza Git</p>
+</a>
+</nav>
+<div class="flex flex-col gap-1 mt-auto">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">help_outline</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Yardım</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">logout</span>
+<p class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal">Çıkış Yap</p>
+</a>
+</div>
+</div>
+</aside>
+<main class="flex-1">
+<header class="sticky top-0 z-10 flex items-center justify-end gap-4 bg-background-light dark:bg-background-dark p-4 sm:p-6 lg:p-8 border-b border-gray-200 dark:border-gray-700">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBcBAcQ779zCyLRe0mu8uTAGCXhaAeYIZmNZaJLLSCrAShKvFCPqdoZrACycMqbtfdlzciYGCCoQEGUvQQIalGubc8NSPmPD_AVTqKMccz0_xTN7XttG5M8IknnS1D87u6SI8pmjOzowKq2J-pq4ECmPYnwjcKJQ3AHIC4Hr-N6gJqDUo54Pei7VMCb2VHJi1Ob-mDKbYJQU7GXQ7i59_sN8Z6c5K4TLbih5Exe-Aw3Gd_iHCRLncNwCgW9HmTlVcMBBDhwS6V0kODf");'></div>
+<div class="flex flex-col text-sm">
+<h1 class="text-[#111418] dark:text-gray-200 font-semibold">Ali Yılmaz</h1>
+<p class="text-[#617589] dark:text-gray-400">Öğrenci</p>
+</div>
+</div>
+</header>
+<div class="p-4 sm:p-6 lg:p-8">
+<div class="w-full max-w-7xl mx-auto">
+<div class="flex flex-wrap gap-2 mb-4">
+<a class="text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary/80" href="#">Analizler</a>
+<span class="text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal">/</span>
+<span class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">AYT Deneme Sınavı #5</span>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<h1 class="text-[#111418] dark:text-gray-100 text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">AYT Deneme Sınavı #5 Detayları</h1>
+<button class="bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-6 rounded-lg flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-xl">visibility</span>
+                        Cevapları Görüntüle
+                    </button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark/80 border border-gray-200 dark:border-gray-700">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Toplam Net</p>
+<p class="text-[#111418] dark:text-gray-100 tracking-light text-4xl font-bold leading-tight">55.25</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark/80 border border-gray-200 dark:border-gray-700">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Doğru</p>
+<p class="text-success tracking-light text-4xl font-bold leading-tight">62</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark/80 border border-gray-200 dark:border-gray-700">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Yanlış</p>
+<p class="text-error tracking-light text-4xl font-bold leading-tight">27</p>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark/80 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-8">
+<h2 class="text-[#111418] dark:text-gray-100 text-xl font-bold leading-tight tracking-[-0.015em] mb-6">Derslere Göre Net Dağılımı</h2>
+<div class="space-y-4">
+<div class="flex items-end gap-3 h-64">
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 70%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Mat.</span>
+</div>
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 60%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Fiz.</span>
+</div>
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 55%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Kim.</span>
+</div>
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 50%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Biy.</span>
+</div>
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 80%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Edb.</span>
+</div>
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 40%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Tar.</span>
+</div>
+<div class="flex flex-col items-center flex-1 h-full justify-end gap-2">
+<div class="w-full bg-primary/20 dark:bg-primary/30 rounded-t-md hover:bg-primary/30 dark:hover:bg-primary/40 transition-all" style="height: 45%;"></div>
+<span class="text-xs text-neutral dark:text-gray-400 font-medium">Coğ.</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h2 class="text-[#111418] dark:text-gray-100 text-xl font-bold leading-tight tracking-[-0.015em] mb-4">Ders Analizi</h2>
+<div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+<nav aria-label="Tabs" class="flex space-x-4 -mb-px">
+<a class="border-primary text-primary whitespace-nowrap py-3 px-1 border-b-2 font-semibold text-sm" href="#">Matematik</a>
+<a class="border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" href="#">Fizik</a>
+<a class="border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" href="#">Kimya</a>
+<a class="border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" href="#">Biyoloji</a>
+<a class="border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" href="#">Edebiyat</a>
+</nav>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-1 flex flex-col gap-6">
+<div class="bg-white dark:bg-background-dark/80 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+<h3 class="text-[#111418] dark:text-gray-200 text-lg font-bold mb-4">Matematik Analizi</h3>
+<div class="flex justify-center my-4">
+<div class="relative w-40 h-40">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<circle class="text-gray-200 dark:text-gray-700" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-width="3.8"></circle>
+<circle class="text-[#28a745]" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-dasharray="65, 100" stroke-dashoffset="0" stroke-width="3.8"></circle>
+<circle class="text-[#dc3545]" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-dasharray="15, 100" stroke-dashoffset="-65" stroke-width="3.8"></circle>
+<circle class="text-gray-400 dark:text-gray-500" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-dasharray="20, 100" stroke-dashoffset="-80" stroke-width="3.8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-[#111418] dark:text-gray-100">24.5</span>
+<span class="text-sm text-neutral dark:text-gray-400">Net</span>
+</div>
+</div>
+</div>
+<div class="space-y-3 text-sm">
+<div class="flex justify-between items-center"><span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#28a745]"></span>Doğru</span><span class="font-semibold text-[#111418] dark:text-gray-200">26</span></div>
+<div class="flex justify-between items-center"><span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#dc3545]"></span>Yanlış</span><span class="font-semibold text-[#111418] dark:text-gray-200">6</span></div>
+<div class="flex justify-between items-center"><span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500"></span>Boş</span><span class="font-semibold text-[#111418] dark:text-gray-200">8</span></div>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 bg-white dark:bg-background-dark/80 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+<h3 class="text-[#111418] dark:text-gray-200 text-lg font-bold mb-4">Konu Dağılımı</h3>
+<div class="flow-root">
+<ul class="divide-y divide-gray-200 dark:divide-gray-700" role="list">
+<li class="py-3 sm:py-4">
+<div class="flex items-center space-x-4">
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium text-[#111418] dark:text-gray-200 truncate">Türev</p>
+<p class="text-sm text-neutral dark:text-gray-400 truncate">4 Soru</p>
+</div>
+<div class="inline-flex items-center text-base font-semibold text-[#111418] dark:text-gray-200">
+<span class="text-success mr-3">3D</span>
+<span class="text-error">1Y</span>
+</div>
+</div>
+</li>
+<li class="py-3 sm:py-4">
+<div class="flex items-center space-x-4">
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium text-[#111418] dark:text-gray-200 truncate">Limit ve Süreklilik</p>
+<p class="text-sm text-neutral dark:text-gray-400 truncate">3 Soru</p>
+</div>
+<div class="inline-flex items-center text-base font-semibold text-[#111418] dark:text-gray-200">
+<span class="text-success mr-3">2D</span>
+<span class="text-error">1Y</span>
+</div>
+</div>
+</li>
+<li class="py-3 sm:py-4">
+<div class="flex items-center space-x-4">
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium text-[#111418] dark:text-gray-200 truncate">İntegral</p>
+<p class="text-sm text-neutral dark:text-gray-400 truncate">4 Soru</p>
+</div>
+<div class="inline-flex items-center text-base font-semibold text-[#111418] dark:text-gray-200">
+<span class="text-success mr-3">3D</span>
+<span class="text-error mr-3">0Y</span>
+<span class="text-neutral">1B</span>
+</div>
+</div>
+</li>
+<li class="py-3 sm:py-4">
+<div class="flex items-center space-x-4">
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium text-[#111418] dark:text-gray-200 truncate">Trigonometri</p>
+<p class="text-sm text-neutral dark:text-gray-400 truncate">5 Soru</p>
+</div>
+<div class="inline-flex items-center text-base font-semibold text-[#111418] dark:text-gray-200">
+<span class="text-success mr-3">4D</span>
+<span class="text-error">1Y</span>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

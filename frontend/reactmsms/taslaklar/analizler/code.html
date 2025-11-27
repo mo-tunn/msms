@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Analizler - Öğrenci Paneli</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#137fec",
+                    "background-light": "#f6f7f8",
+                    "background-dark": "#101922",
+                    "success": "#7ED321",
+                    "danger": "#D0021B",
+                    "neutral": "#9B9B9B"
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+    </script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        font-size: 24px;
+    }
+    .material-symbols-outlined.fill {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-row">
+<aside class="flex h-screen min-w-[250px] flex-col justify-between border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-4 sticky top-0">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 p-2 mb-4">
+<div class="bg-primary rounded-lg size-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white">school</span>
+</div>
+<h1 class="text-[#111418] dark:text-gray-100 text-xl font-bold leading-normal">Sistem Adı</h1>
+</div>
+<hr class="border-gray-200 dark:border-gray-700 my-2"/>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">home</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Ana Sayfa</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">calendar_month</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Ders Programı</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined fill text-primary">pie_chart</span>
+<p class="text-primary text-sm font-semibold leading-normal">Analizler</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">groups</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Toplantılar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">chat</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Mesajlar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">school</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Kunduza Git</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">help</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Yardım</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[#111418] dark:text-gray-300">logout</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Çıkış Yap</p>
+</a>
+</div>
+</aside>
+<main class="flex-1">
+<div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark sticky top-0 z-10 h-16">
+<div></div>
+<div class="flex items-center gap-4">
+<button class="flex h-9 w-9 items-center justify-center rounded-full bg-transparent p-0 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+<span class="material-symbols-outlined text-2xl">dark_mode</span>
+</button>
+<button class="flex h-9 w-9 items-center justify-center rounded-full bg-transparent p-0 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</button>
+<div class="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Student profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDXOr_4gf80z3uehrLiwJCpuFd1-ZwBsZVGpBKGKHk2SST_6FxXpB3UomWJXgJHjO2UK3wISoB5uuK3OQWdD3guH-anJMEkUYxwRhFWtjwDN48oB7Qu2X4n1uP9yfnrJIwhxqzzabQAIfw-eDVoZwm9zX5OluTcxKghIV1enbrDyViy5UYhNHcaQ-1UwsucG7Vr__3BOapewWQjUCS4yf8gNOoWTHbfYKDHHNyM2FDp8pzxoK-oDxR1oSfXNRGHqeeu-uAzTOfVtrqC");'></div>
+<div class="flex flex-col text-left">
+<h2 class="text-[#111418] dark:text-gray-100 text-sm font-medium leading-normal">Emirhan Yılmaz</h2>
+<p class="text-[#617589] dark:text-gray-400 text-xs font-normal leading-normal">Öğrenci</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-8">
+<div class="layout-content-container flex flex-col w-full">
+<div class="flex flex-wrap justify-between gap-3 pb-4 items-center">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Analizler</p>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Akademik ilerlemeni buradan takip et.</p>
+</div>
+</div>
+<div class="flex gap-2 py-4 mb-4 border-b border-gray-200 dark:border-gray-700">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary text-white px-4">
+<p class="text-sm font-medium leading-normal">Haftalık</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 px-4">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Aylık</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 px-4">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">3 Aylık</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 px-4">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Tümü</p>
+</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="col-span-1 lg:col-span-2 flex flex-col gap-4 p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Ders Programı Görevleri</h2>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-x-8 pt-2 items-center">
+<div class="flex flex-col items-center justify-center gap-4">
+<div class="relative size-32">
+<svg class="size-full" viewBox="0 0 36 36">
+<path class="stroke-current text-gray-200 dark:text-gray-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-current text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke-dasharray="100, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col gap-0.5">
+<span class="text-2xl font-bold text-[#111418] dark:text-white">20</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Toplam Görev</span>
+</div>
+</div>
+<p class="text-base font-medium text-gray-700 dark:text-gray-300">Haftalık</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-4">
+<div class="relative size-32">
+<svg class="size-full" viewBox="0 0 36 36">
+<path class="stroke-current text-gray-200 dark:text-gray-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-current text-success" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke-dasharray="85, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col gap-0.5">
+<span class="text-2xl font-bold text-[#111418] dark:text-white">85%</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">17 / 20 Görev</span>
+</div>
+</div>
+<p class="text-base font-medium text-gray-700 dark:text-gray-300">Tamamlandı</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-4">
+<div class="relative size-32">
+<svg class="size-full" viewBox="0 0 36 36">
+<path class="stroke-current text-gray-200 dark:text-gray-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-current text-danger" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke-dasharray="15, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col gap-0.5">
+<span class="text-2xl font-bold text-[#111418] dark:text-white">15%</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">3 / 20 Görev</span>
+</div>
+</div>
+<p class="text-base font-medium text-gray-700 dark:text-gray-300">İhmal Edildi</p>
+</div>
+</div>
+</div>
+<div class="col-span-1 flex flex-col gap-4 p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Görüşme Katılımı</h2>
+<div class="flex items-center justify-center gap-6 h-full">
+<div class="relative size-32">
+<svg class="size-full" viewBox="0 0 36 36">
+<path class="stroke-current text-gray-200 dark:text-gray-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-current text-success" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke-dasharray="80, 100" stroke-linecap="round" stroke-width="3"></path>
+<path class="stroke-current text-danger" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke-dasharray="15, 100" stroke-dashoffset="-80" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="text-2xl font-bold text-[#111418] dark:text-white">12</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Görüşme</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-sm">
+<div class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-success"></span>Katıldı: <span class="font-semibold ml-auto">10</span></div>
+<div class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-danger"></span>Kaçırıldı: <span class="font-semibold ml-auto">2</span></div>
+<div class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-neutral"></span>İzinli: <span class="font-semibold ml-auto">0</span></div>
+</div>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-3 flex flex-col gap-4 p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Zinciri Kırma</h2>
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+<div class="flex flex-col items-center md:items-start text-center md:text-left">
+<p class="text-6xl font-black text-primary">28</p>
+<p class="text-lg font-medium text-gray-600 dark:text-gray-300">Günlük seri</p>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Harika gidiyorsun, devam et!</p>
+</div>
+<div class="flex items-center justify-center w-full md:w-auto">
+<div class="flex items-center space-x-0.5">
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+<div class="w-6 h-0.5 bg-primary/70 transform -rotate-45 -translate-x-2 -translate-y-2"></div>
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+<div class="w-6 h-0.5 bg-primary/70 transform rotate-45 -translate-x-2 translate-y-2"></div>
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+<div class="w-6 h-0.5 bg-primary/70 transform -rotate-45 -translate-x-2 -translate-y-2"></div>
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+<div class="hidden sm:flex items-center space-x-0.5">
+<div class="w-6 h-0.5 bg-primary/70 transform rotate-45 -translate-x-2 translate-y-2"></div>
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+</div>
+<div class="hidden md:flex items-center space-x-0.5">
+<div class="w-6 h-0.5 bg-primary/70 transform -rotate-45 -translate-x-2 -translate-y-2"></div>
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+</div>
+<div class="hidden lg:flex items-center space-x-0.5">
+<div class="w-6 h-0.5 bg-primary/70 transform rotate-45 -translate-x-2 translate-y-2"></div>
+<div class="relative size-8 flex items-center justify-center">
+<div class="size-5 bg-primary rounded-full shadow-[0_0_12px_2px_rgba(19,127,236,0.6)]"></div>
+</div>
+</div>
+</div>
+<div class="h-0.5 w-12 bg-primary/50 ml-2 hidden sm:block"></div>
+<div class="text-primary font-bold ml-2 hidden sm:block">+21</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
