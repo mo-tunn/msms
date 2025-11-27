@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sınavlarım</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3A86FF",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full">
+<aside class="sticky top-0 h-screen w-64 flex-shrink-0 bg-white dark:bg-gray-900/50 dark:border-r dark:border-gray-800 p-4 flex flex-col justify-between shadow-sm">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2 p-2">
+<span class="text-primary text-3xl font-bold">LOGO</span>
+</div>
+<hr class="border-gray-200 dark:border-gray-700"/>
+<nav class="flex flex-col gap-2 mt-2">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">home</span>
+<p class="text-sm font-medium">Ana Sayfa</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">calendar_month</span>
+<p class="text-sm font-medium">Ders Programı</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary dark:text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bar_chart</span>
+<p class="text-sm font-medium">Analizler</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">groups</span>
+<p class="text-sm font-medium">Toplantılar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">chat</span>
+<p class="text-sm font-medium">Mesajlar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">rocket_launch</span>
+<p class="text-sm font-medium">Kunduza Git</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">help_outline</span>
+<p class="text-sm font-medium">Yardım</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-800 dark:text-gray-200">logout</span>
+<p class="text-sm font-medium">Çıkış Yap</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<div class="sticky top-0 z-10 flex items-center justify-end gap-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm p-4 h-20 border-b border-gray-200 dark:border-gray-800">
+<button class="relative grid place-items-center rounded-full text-gray-600 dark:text-gray-300 transition-colors hover:text-gray-900 dark:hover:text-white size-10 hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="relative grid place-items-center rounded-full text-gray-600 dark:text-gray-300 transition-colors hover:text-gray-900 dark:hover:text-white size-10 hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+<span class="material-symbols-outlined">notifications</span>
+<div class="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-primary ring-2 ring-background-light dark:ring-background-dark"></div>
+</button>
+<button class="relative grid place-items-center rounded-full text-gray-600 dark:text-gray-300 transition-colors hover:text-gray-900 dark:hover:text-white size-10 hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+<span class="material-symbols-outlined">person</span>
+</button>
+<div class="flex items-center gap-3 pr-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Student profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAKqoo1gRF1KVo0Z84Zru1vktncWfW8XtedVw23Q7LMG7swXgb3IWut1caX0hVqK0HTarGSDv53l1PDrMF2jlg9_r5YiqxbfPMfWWd0Orw5dzPNRDypphy4dlJJtUNOKV8KQi-W_GQyG_qc5PfJA8Q4WbQ8K9AMamqA-8zedeA1o59g-SawfGIPQ0VmS0fTH2vi3bIypJcxso0_67-Uy2D3JKAulIWnudM_dllftSaqsKPla9lKcjRn_G2WYyMYefOEqeteWuub1LhC");'></div>
+<div class="flex flex-col text-left">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">Ali Veli</h1>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">12. Sınıf Öğrencisi</p>
+</div>
+</div>
+</div>
+<div class="p-8">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<h1 class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Sınavlarım</h1>
+<div class="flex items-center gap-2 p-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 pl-2">calendar_month</span>
+<select class="bg-transparent text-gray-800 dark:text-gray-200 text-sm font-medium border-0 focus:ring-0">
+<option>Son 6 Ay</option>
+<option>Son 30 Gün</option>
+<option>Son 7 Gün</option>
+<option>Tüm Zamanlar</option>
+</select>
+</div>
+</div>
+<div class="flex mb-6">
+<div class="flex h-10 items-center justify-center rounded-xl bg-white dark:bg-gray-900 p-1 border border-gray-200 dark:border-gray-700">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-4 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-600 dark:text-gray-300 dark:has-[:checked]:text-white text-sm font-medium leading-normal transition-colors">
+<span class="truncate">Tümü</span>
+<input checked="" class="invisible w-0" name="exam-type" type="radio" value="Tümü"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-4 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-600 dark:text-gray-300 dark:has-[:checked]:text-white text-sm font-medium leading-normal transition-colors">
+<span class="truncate">TYT</span>
+<input class="invisible w-0" name="exam-type" type="radio" value="TYT"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-4 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-600 dark:text-gray-300 dark:has-[:checked]:text-white text-sm font-medium leading-normal transition-colors">
+<span class="truncate">AYT</span>
+<input class="invisible w-0" name="exam-type" type="radio" value="AYT"/>
+</label>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 text-base font-medium">Genel Ortalama</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold">85.4</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 text-base font-medium">Toplam Sınav</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold">23</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-800 dark:text-gray-200 text-base font-medium">En Yüksek Net</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold">112.5</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+<div class="lg:col-span-3 flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-gray-800 dark:text-gray-200 text-lg font-medium">Net Sayısı Gelişimi</p>
+<div class="flex items-baseline gap-2">
+<p class="text-gray-900 dark:text-white tracking-light text-4xl font-bold">75.5 Net</p>
+<p class="text-[#4CAF50] text-base font-medium">+5.2%</p>
+</div>
+</div>
+<span class="text-gray-500 dark:text-gray-400">Son 6 Ay</span>
+</div>
+<div class="grid min-h-[220px] grid-flow-col gap-6 grid-rows-[1fr_auto] items-end justify-items-center px-3 pt-4">
+<div class="bg-primary/20 dark:bg-primary/40 w-full rounded-t-lg" style="height: 70%;">
+<div class="h-full w-full bg-primary rounded-t-lg" style="height: 0%;"></div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-[13px] font-bold tracking-[0.015em]">Oca</p>
+<div class="bg-primary/20 dark:bg-primary/40 w-full rounded-t-lg" style="height: 80%;">
+<div class="h-full w-full bg-primary rounded-t-lg" style="height: 0%;"></div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-[13px] font-bold tracking-[0.015em]">Şub</p>
+<div class="bg-primary/20 dark:bg-primary/40 w-full rounded-t-lg" style="height: 55%;">
+<div class="h-full w-full bg-primary rounded-t-lg" style="height: 0%;"></div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-[13px] font-bold tracking-[0.015em]">Mar</p>
+<div class="bg-primary/20 dark:bg-primary/40 w-full rounded-t-lg" style="height: 65%;">
+<div class="h-full w-full bg-primary rounded-t-lg" style="height: 0%;"></div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-[13px] font-bold tracking-[0.015em]">Nis</p>
+<div class="bg-primary/20 dark:bg-primary/40 w-full rounded-t-lg" style="height: 90%;">
+<div class="h-full w-full bg-primary rounded-t-lg" style="height: 0%;"></div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-[13px] font-bold tracking-[0.015em]">May</p>
+<div class="bg-primary/20 dark:bg-primary/40 w-full rounded-t-lg" style="height: 100%;">
+<div class="h-full w-full bg-primary rounded-t-lg" style="height: 0%;"></div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-[13px] font-bold tracking-[0.015em]">Haz</p>
+</div>
+</div>
+<div class="lg:col-span-2 flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
+<div>
+<p class="text-gray-800 dark:text-gray-200 text-lg font-medium">Soru Dağılımı</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Tüm Sınavlar Ortalaması</p>
+</div>
+<div class="flex-1 flex items-center justify-center my-4">
+<div class="relative w-48 h-48">
+<svg class="w-full h-full" style="transform: rotate(-90deg);" viewBox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E0E0E0" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#4CAF50" stroke-dasharray="80, 100" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#FF5252" stroke-dasharray="12, 100" stroke-dashoffset="-80" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-gray-900 dark:text-white">80%</span>
+<span class="text-sm text-gray-500 dark:text-gray-400">Ort. Doğru</span>
+</div>
+</div>
+</div>
+<div class="flex justify-center gap-4 text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-[#4CAF50]"></div>
+<span class="text-gray-700 dark:text-gray-300">Doğru</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-[#FF5252]"></div>
+<span class="text-gray-700 dark:text-gray-300">Yanlış</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-[#E0E0E0]"></div>
+<span class="text-gray-700 dark:text-gray-300">Boş</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+<div class="p-6 border-b border-gray-200 dark:border-gray-700">
+<h3 class="text-lg font-medium text-gray-900 dark:text-white">Sınav Geçmişi</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-800">
+<tr>
+<th class="px-6 py-3" scope="col">Sınav Adı</th>
+<th class="px-6 py-3" scope="col">Tarih</th>
+<th class="px-6 py-3 text-center text-green-600" scope="col">Doğru</th>
+<th class="px-6 py-3 text-center text-red-500" scope="col">Yanlış</th>
+<th class="px-6 py-3 text-center" scope="col">Net</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">TYT Deneme Sınavı #12</th>
+<td class="px-6 py-4">15 Haziran 2024</td>
+<td class="px-6 py-4 text-center">90</td>
+<td class="px-6 py-4 text-center">18</td>
+<td class="px-6 py-4 text-center font-bold text-gray-800 dark:text-gray-200">85.50</td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">AYT Deneme Sınavı #8</th>
+<td class="px-6 py-4">08 Haziran 2024</td>
+<td class="px-6 py-4 text-center">65</td>
+<td class="px-6 py-4 text-center">10</td>
+<td class="px-6 py-4 text-center font-bold text-gray-800 dark:text-gray-200">62.50</td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">TYT Deneme Sınavı #11</th>
+<td class="px-6 py-4">01 Haziran 2024</td>
+<td class="px-6 py-4 text-center">88</td>
+<td class="px-6 py-4 text-center">22</td>
+<td class="px-6 py-4 text-center font-bold text-gray-800 dark:text-gray-200">82.50</td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">AYT Deneme Sınavı #7</th>
+<td class="px-6 py-4">25 Mayıs 2024</td>
+<td class="px-6 py-4 text-center">68</td>
+<td class="px-6 py-4 text-center">8</td>
+<td class="px-6 py-4 text-center font-bold text-gray-800 dark:text-gray-200">66.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
