@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminDashboardPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('student');
     const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     // User Management State
     const [users, setUsers] = useState([
@@ -17,6 +19,7 @@ const AdminDashboardPage = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     // Mock student list for mentor assignment (for registration form)
+    // In a real app, this should be fetched from the backend
     const students = [
         { id: 1, name: 'Ahmet Yılmaz' },
         { id: 2, name: 'Ayşe Demir' },
@@ -24,15 +27,136 @@ const AdminDashboardPage = () => {
         { id: 4, name: 'Zeynep Çelik' },
     ];
 
+    // Form States
+    const [studentFormData, setStudentFormData] = useState({
+        first_name: '',
+        last_name: '',
+        birth_date: '',
+        tckn: '',
+        password: '',
+        school_name: '',
+        grade_level: '9. Sınıf',
+        field: 'Sayısal',
+        school_score: '',
+        email: '',
+        phone: '',
+        address: ''
+    });
+
+    const [mentorFormData, setMentorFormData] = useState({
+        first_name: '',
+        last_name: '',
+        title: '',
+        branch: '',
+        email: '',
+        phone: '',
+        password: '',
+        student_ids: []
+    });
+
     const handleLogout = () => {
+        localStorage.removeItem('token');
         navigate('/login');
     };
 
-    const handleSubmit = (e) => {
+    const handleStudentChange = (e) => {
+        const { name, value } = e.target;
+        setStudentFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleMentorChange = (e) => {
+        const { name, value } = e.target;
+        setMentorFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleMentorStudentSelection = (studentId) => {
+        setMentorFormData(prev => {
+            const currentIds = prev.student_ids;
+            if (currentIds.includes(studentId)) {
+                return { ...prev, student_ids: currentIds.filter(id => id !== studentId) };
+            } else {
+                return { ...prev, student_ids: [...currentIds, studentId] };
+            }
+        });
+    };
+
+    const handleStudentSubmit = async (e) => {
         e.preventDefault();
-        setSuccessMessage('Kayıt başarıyla oluşturuldu!');
-        setTimeout(() => setSuccessMessage(''), 3000);
-        e.target.reset();
+        setSuccessMessage('');
+        setErrorMessage('');
+
+        try {
+            const token = localStorage.getItem('token');
+            const payload = {
+                ...studentFormData,
+                role_name: 'Student'
+            };
+
+            await axios.post('http://localhost:3001/register', payload, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setSuccessMessage('Öğrenci kaydı başarıyla oluşturuldu!');
+            setStudentFormData({
+                first_name: '',
+                last_name: '',
+                birth_date: '',
+                tckn: '',
+                password: '',
+                school_name: '',
+                grade_level: '9. Sınıf',
+                field: 'Sayısal',
+                school_score: '',
+                email: '',
+                phone: '',
+                address: ''
+            });
+            setTimeout(() => setSuccessMessage(''), 3000);
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            setErrorMessage(error.response?.data?.error || 'Kayıt sırasında bir hata oluştu.');
+            setTimeout(() => setErrorMessage(''), 5000);
+        }
+    };
+
+    const handleMentorSubmit = async (e) => {
+        e.preventDefault();
+        setSuccessMessage('');
+        setErrorMessage('');
+
+        try {
+            const token = localStorage.getItem('token');
+            const payload = {
+                ...mentorFormData,
+                role_name: 'Mentor',
+                // Map frontend field names to backend expected names if needed
+                // Backend expects 'branch' as 'Uzmanlık Alanı' from the form
+                // Backend expects 'title' as 'Unvan' from the form
+            };
+
+            await axios.post('http://localhost:3001/register', payload, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setSuccessMessage('Mentor kaydı başarıyla oluşturuldu!');
+            setMentorFormData({
+                first_name: '',
+                last_name: '',
+                title: '',
+                branch: '',
+                email: '',
+                phone: '',
+                password: '',
+                student_ids: []
+            });
+            setTimeout(() => setSuccessMessage(''), 3000);
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            setErrorMessage(error.response?.data?.error || 'Kayıt sırasında bir hata oluştu.');
+            setTimeout(() => setErrorMessage(''), 5000);
+        }
     };
 
     const handleEditClick = (user) => {
@@ -112,18 +236,24 @@ const AdminDashboardPage = () => {
                     </button>
                 </div>
 
-                {/* Success Message */}
+                {/* Messages */}
                 {successMessage && (
                     <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-3 text-green-700 dark:text-green-400 animate-in fade-in slide-in-from-top-2">
                         <span className="material-symbols-outlined">check_circle</span>
                         {successMessage}
                     </div>
                 )}
+                {errorMessage && (
+                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-700 dark:text-red-400 animate-in fade-in slide-in-from-top-2">
+                        <span className="material-symbols-outlined">error</span>
+                        {errorMessage}
+                    </div>
+                )}
 
                 {/* Content */}
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 md:p-8 shadow-sm">
                     {activeTab === 'student' && (
-                        <form onSubmit={handleSubmit} className="space-y-8">
+                        <form onSubmit={handleStudentSubmit} className="space-y-8">
                             <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yeni Öğrenci Kaydı</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Sisteme yeni bir öğrenci eklemek için tüm bilgileri eksiksiz doldurun.</p>
@@ -135,23 +265,23 @@ const AdminDashboardPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Ad</label>
-                                        <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Ali" />
+                                        <input required name="first_name" value={studentFormData.first_name} onChange={handleStudentChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Ali" />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Soyad</label>
-                                        <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Yılmaz" />
+                                        <input required name="last_name" value={studentFormData.last_name} onChange={handleStudentChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Yılmaz" />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Doğum Tarihi</label>
-                                        <input required type="date" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                                        <input required name="birth_date" value={studentFormData.birth_date} onChange={handleStudentChange} type="date" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">TC Kimlik Numarası</label>
-                                        <input required type="text" maxLength="11" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="11 haneli TC No" />
+                                        <input required name="tckn" value={studentFormData.tckn} onChange={handleStudentChange} type="text" maxLength="11" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="11 haneli TC No" />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Şifre</label>
-                                        <input required type="password" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="******" />
+                                        <input required name="password" value={studentFormData.password} onChange={handleStudentChange} type="password" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="******" />
                                     </div>
                                 </div>
                             </div>
@@ -162,11 +292,11 @@ const AdminDashboardPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Okul</label>
-                                        <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Atatürk Anadolu Lisesi" />
+                                        <input required name="school_name" value={studentFormData.school_name} onChange={handleStudentChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Atatürk Anadolu Lisesi" />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Sınıf / Seviye</label>
-                                        <select className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                        <select name="grade_level" value={studentFormData.grade_level} onChange={handleStudentChange} className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary">
                                             <option>9. Sınıf</option>
                                             <option>10. Sınıf</option>
                                             <option>11. Sınıf</option>
@@ -176,7 +306,7 @@ const AdminDashboardPage = () => {
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Alan</label>
-                                        <select className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                        <select name="field" value={studentFormData.field} onChange={handleStudentChange} className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary">
                                             <option>Sayısal</option>
                                             <option>Eşit Ağırlık</option>
                                             <option>Sözel</option>
@@ -185,12 +315,10 @@ const AdminDashboardPage = () => {
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Okul Başarı Puanı (OBP)</label>
-                                        <input type="number" step="0.01" max="100" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: 92.50" />
+                                        <input name="school_score" value={studentFormData.school_score} onChange={handleStudentChange} type="number" step="0.01" max="100" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: 92.50" />
                                     </div>
                                 </div>
                             </div>
-
-
 
                             {/* İletişim Bilgileri */}
                             <div className="space-y-4">
@@ -198,15 +326,15 @@ const AdminDashboardPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">E-posta</label>
-                                        <input required type="email" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="ornek@ogrenci.com" />
+                                        <input required name="email" value={studentFormData.email} onChange={handleStudentChange} type="email" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="ornek@ogrenci.com" />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Telefon</label>
-                                        <input required type="tel" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="05XX XXX XX XX" />
+                                        <input required name="phone" value={studentFormData.phone} onChange={handleStudentChange} type="tel" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="05XX XXX XX XX" />
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
                                         <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Adres</label>
-                                        <textarea className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary min-h-[100px]" placeholder="Açık adres giriniz..." />
+                                        <textarea name="address" value={studentFormData.address} onChange={handleStudentChange} className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary min-h-[100px]" placeholder="Açık adres giriniz..." />
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +349,7 @@ const AdminDashboardPage = () => {
                     )}
 
                     {activeTab === 'mentor' && (
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleMentorSubmit} className="space-y-6">
                             <div className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-6">
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yeni Mentor Kaydı</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Sisteme yeni bir mentor eklemek ve öğrenci atamak için bilgileri doldurun.</p>
@@ -230,31 +358,44 @@ const AdminDashboardPage = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Ad</label>
-                                    <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Selin" />
+                                    <input required name="first_name" value={mentorFormData.first_name} onChange={handleMentorChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Selin" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Soyad</label>
-                                    <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Yılmaz" />
+                                    <input required name="last_name" value={mentorFormData.last_name} onChange={handleMentorChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Yılmaz" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Unvan</label>
-                                    <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Matematik Mentoru" />
+                                    <input required name="title" value={mentorFormData.title} onChange={handleMentorChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: Matematik Mentoru" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Uzmanlık Alanı</label>
-                                    <input required type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: TYT/AYT Matematik, Geometri" />
+                                    <input required name="branch" value={mentorFormData.branch} onChange={handleMentorChange} type="text" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Örn: TYT/AYT Matematik, Geometri" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">E-posta</label>
-                                    <input required type="email" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="mentor@edukoc.com" />
+                                    <input required name="email" value={mentorFormData.email} onChange={handleMentorChange} type="email" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="mentor@edukoc.com" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Telefon</label>
-                                    <input required type="tel" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="05XX XXX XX XX" />
+                                    <input required name="phone" value={mentorFormData.phone} onChange={handleMentorChange} type="tel" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="05XX XXX XX XX" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Şifre</label>
-                                    <input required type="password" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="******" />
+                                    <input required name="password" value={mentorFormData.password} onChange={handleMentorChange} type="password" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="******" />
+                                </div>
+                                {/* Mentor needs TCKN and Birth Date too for verification */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200">TC Kimlik Numarası</label>
+                                    <input required name="tckn" value={mentorFormData.tckn} onChange={handleMentorChange} type="text" maxLength="11" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="11 haneli TC No" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Doğum Tarihi</label>
+                                    <input required name="birth_date" value={mentorFormData.birth_date} onChange={handleMentorChange} type="date" className="w-full h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200">Adres</label>
+                                    <textarea name="address" value={mentorFormData.address} onChange={handleMentorChange} className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary min-h-[100px]" placeholder="Açık adres giriniz..." />
                                 </div>
 
                                 <div className="md:col-span-2 space-y-2">
@@ -262,7 +403,12 @@ const AdminDashboardPage = () => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4 border border-gray-300 dark:border-gray-600 rounded-lg max-h-48 overflow-y-auto">
                                         {students.map(student => (
                                             <label key={student.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg cursor-pointer transition-colors">
-                                                <input type="checkbox" className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary" />
+                                                <input
+                                                    type="checkbox"
+                                                    checked={mentorFormData.student_ids.includes(student.id)}
+                                                    onChange={() => handleMentorStudentSelection(student.id)}
+                                                    className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
+                                                />
                                                 <span className="text-sm text-gray-700 dark:text-gray-300">{student.name}</span>
                                             </label>
                                         ))}

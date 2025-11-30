@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="IdentityService"
+             targetNamespace="http://localhost:8000/WS"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://localhost:8000/WS"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <types>
+        <xsd:schema targetNamespace="http://localhost:8000/WS">
+            <xsd:element name="TCKimlikNoDogrula">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="TCKimlikNo" type="xsd:long"/>
+                        <xsd:element name="Ad" type="xsd:string"/>
+                        <xsd:element name="Soyad" type="xsd:string"/>
+                        <xsd:element name="DogumYili" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="TCKimlikNoDogrulaResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="TCKimlikNoDogrulaResult" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="TCKimlikNoDogrulaInput">
+        <part name="parameters" element="tns:TCKimlikNoDogrula"/>
+    </message>
+    <message name="TCKimlikNoDogrulaOutput">
+        <part name="parameters" element="tns:TCKimlikNoDogrulaResponse"/>
+    </message>
+
+    <portType name="IdentityServiceSoap">
+        <operation name="TCKimlikNoDogrula">
+            <input message="tns:TCKimlikNoDogrulaInput"/>
+            <output message="tns:TCKimlikNoDogrulaOutput"/>
+        </operation>
+    </portType>
+
+    <binding name="IdentityServiceSoap" type="tns:IdentityServiceSoap">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="TCKimlikNoDogrula">
+            <soap:operation soapAction="http://localhost:8000/TCKimlikNoDogrula"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="IdentityService">
+        <port name="IdentityServiceSoap" binding="tns:IdentityServiceSoap">
+            <soap:address location="http://localhost:8000/wsdl"/>
+        </port>
+    </service>
+</definitions>

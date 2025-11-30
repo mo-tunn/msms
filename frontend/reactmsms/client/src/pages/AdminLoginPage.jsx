@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminLoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password === 'admin123') { // Mock secret password
-            navigate('/admin/dashboard');
-        } else {
-            setError('Geçersiz yönetici şifresi.');
+        setError('');
+
+        try {
+            const response = await axios.post('http://localhost:3001/adminlogin', { password });
+
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                navigate('/admin/dashboard');
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || 'Giriş başarısız.');
+            console.error('Login error:', err);
         }
     };
 
