@@ -1,0 +1,50 @@
+[
+  {
+    "tcKimlikNo": "12345678901",
+    "ad": "AHMET",
+    "soyad": "YILMAZ",
+    "dogumYili": 1985
+  },
+  {
+    "tcKimlikNo": "12345678902",
+    "ad": "MEHMET",
+    "soyad": "KAYA",
+    "dogumYili": 1990
+  },
+  {
+    "tcKimlikNo": "12345678903",
+    "ad": "AYŞE",
+    "soyad": "DEMİR",
+    "dogumYili": 1988
+  },
+  {
+    "tcKimlikNo": "12345678904",
+    "ad": "FATİH",
+    "soyad": "ÇELİK",
+    "dogumYili": 1975
+  },
+  {
+    "tcKimlikNo": "12345678905",
+    "ad": "ZEYNEP",
+    "soyad": "ÖZTÜRK",
+    "dogumYili": 1995
+  },
+  {
+    "tcKimlikNo": "11111111111",
+    "ad": "TEST",
+    "soyad": "KULLANICI",
+    "dogumYili": 2000
+  },
+  {
+    "tcKimlikNo": "99999999999",
+    "ad": "ADMIN",
+    "soyad": "ADMIN",
+    "dogumYili": 1980
+  },
+  {
+    "tcKimlikNo": "31849936072",
+    "ad": "METE",
+    "soyad": "KAYA",
+    "dogumYili": 2004
+  }
+]

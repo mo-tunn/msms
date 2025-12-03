@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="KimlikDogrulamaService"
+             targetNamespace="http://mock.mernis.gov.tr/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://mock.mernis.gov.tr/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Veri Tipleri -->
+    <types>
+        <xsd:schema targetNamespace="http://mock.mernis.gov.tr/">
+            
+            <!-- TC Kimlik Doğrulama İstek -->
+            <xsd:element name="TCKimlikNoDogrulaRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="TCKimlikNo" type="xsd:string"/>
+                        <xsd:element name="Ad" type="xsd:string"/>
+                        <xsd:element name="Soyad" type="xsd:string"/>
+                        <xsd:element name="DogumYili" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- TC Kimlik Doğrulama Yanıt -->
+            <xsd:element name="TCKimlikNoDogrulaResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="TCKimlikNoDogrulaResult" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+        </xsd:schema>
+    </types>
+
+    <!-- Mesaj Tanımları -->
+    <message name="TCKimlikNoDogrulaInput">
+        <part name="parameters" element="tns:TCKimlikNoDogrulaRequest"/>
+    </message>
+
+    <message name="TCKimlikNoDogrulaOutput">
+        <part name="parameters" element="tns:TCKimlikNoDogrulaResponse"/>
+    </message>
+
+    <!-- Port Type (Arayüz) -->
+    <portType name="KimlikDogrulamaPortType">
+        <operation name="TCKimlikNoDogrula">
+            <input message="tns:TCKimlikNoDogrulaInput"/>
+            <output message="tns:TCKimlikNoDogrulaOutput"/>
+        </operation>
+    </portType>
+
+    <!-- Binding (SOAP 1.1) -->
+    <binding name="KimlikDogrulamaBinding" type="tns:KimlikDogrulamaPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="TCKimlikNoDogrula">
+            <soap:operation soapAction="http://mock.mernis.gov.tr/TCKimlikNoDogrula"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Servis Tanımı -->
+    <service name="KimlikDogrulamaService">
+        <documentation>MERNİS TC Kimlik Doğrulama Servisi (Mock)</documentation>
+        <port name="KimlikDogrulamaPort" binding="tns:KimlikDogrulamaBinding">
+            <soap:address location="http://localhost:3001/mernis"/>
+        </port>
+    </service>
+
+</definitions>
+

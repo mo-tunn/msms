@@ -1,0 +1,87 @@
+
+================================================================================
+                     VERI ON ISLEME OZET RAPORU                               
+================================================================================
+
+GIRIS VERISI:
+   - Dosya: kitapdata.csv
+   - Satir Sayisi: 1497
+   - Sutun Sayisi: 49
+
+UYGULANAN ISLEMLER:
+
+   1. [OK] Veri Yukleme ve Inceleme
+   2. [OK] Eksik Veri Tespiti
+   3. [OK] Ozellik Cikarimi (Puan, Fiyat, Tarih, vb.)
+   4. [OK] Boslukları Doldurma (Imputation) - Medyan ve Mod ile
+   5. [OK] Kritik Sutunlarda Boslukları Silme
+   6. [OK] Aykiri Deger Tespiti (IQR Metodu)
+   7. [OK] Aykiri Degerleri Temizleme (Capping)
+   8. [OK] Etiket Kodlama (Label Encoding) - 3 sutun
+   9. [OK] Tek-Sicak Kodlama (One-Hot Encoding) - Ana kategori
+   10. [OK] Veri Normalizasyonu (Min-Max 0-1)
+
+CIKIS VERILERI:
+   
+   - kitapdata_model_ready.csv
+     Satir: 1497
+     Sutun: 24
+     Aciklama: Model icin hazir ozellikler
+   
+   - kitapdata_full_details.csv
+     Satir: 1497
+     Sutun: 49
+     Aciklama: Tum sutunlari iceren detayli veri seti
+   
+   - preprocessing_visualization.png
+     Gorsellestirme raporu
+
+HEDEF DEGISKEN: Toplam Satılma Sayısı
+
+VERI SETI MAKINE OGRENMESI ICIN HAZIR!
+
+
+================================================================================
+DETAYLI SUTUN BILGILERI
+================================================================================
+
+ISLENMIS VERI SETINDEKI SUTUNLAR:
+--------------------------------------------------------------------------------
+  1. Liste_Fiyati_Numeric_Normalized
+  2. Sayfa_Sayisi_Numeric_Normalized
+  3. Favorilere Ekleyen Kişi Sayısı_Normalized
+  4. Okuyacağım olarak işaretlenmiş sayısı_Normalized
+  5. Okuyorum olarak işaretlenmiş sayısı_Normalized
+  6. Okudum olarak işaretlenmiş sayısı_Normalized
+  7. Toplam Yorum Sayısı_Normalized
+  8. Puan_Degeri_Normalized
+  9. Oy_Sayisi_Normalized
+ 10. Dil_Encoded
+ 11. Cilt Tipi_Encoded
+ 12. Kağıt Cinsi_Encoded
+ 13. Ana_Kategori_Bilim & Mühendislik
+ 14. Ana_Kategori_Diger
+ 15. Ana_Kategori_Diğer
+ 16. Ana_Kategori_Edebiyat
+ 17. Ana_Kategori_Felsefe-Düşünce
+ 18. Ana_Kategori_Kişisel Gelişim
+ 19. Ana_Kategori_Siyaset
+ 20. Ana_Kategori_Sosyoloji
+ 21. Ana_Kategori_Tarih
+ 22. Ana_Kategori_Çocuk Kitapları
+ 23. Ana_Kategori_İslam
+ 24. Toplam Satılma Sayısı
+
+================================================================================
+ISTATISTIKSEL OZET
+================================================================================
+
+       Liste_Fiyati_Numeric_Normalized  Sayfa_Sayisi_Numeric_Normalized  Favorilere Ekleyen Kişi Sayısı_Normalized  Okuyacağım olarak işaretlenmiş sayısı_Normalized  Okuyorum olarak işaretlenmiş sayısı_Normalized  Okudum olarak işaretlenmiş sayısı_Normalized  Toplam Yorum Sayısı_Normalized  Puan_Degeri_Normalized  Oy_Sayisi_Normalized  Dil_Encoded  Cilt Tipi_Encoded  Kağıt Cinsi_Encoded  Ana_Kategori_Bilim & Mühendislik  Ana_Kategori_Diger  Ana_Kategori_Diğer  Ana_Kategori_Edebiyat  Ana_Kategori_Felsefe-Düşünce  Ana_Kategori_Kişisel Gelişim  Ana_Kategori_Siyaset  Ana_Kategori_Sosyoloji  Ana_Kategori_Tarih  Ana_Kategori_Çocuk Kitapları  Ana_Kategori_İslam  Toplam Satılma Sayısı
+count                      1497.000000                      1497.000000                                1497.000000                                       1497.000000                                     1497.000000                                   1497.000000                     1497.000000             1497.000000           1497.000000  1497.000000        1497.000000          1497.000000                       1497.000000         1497.000000         1497.000000            1497.000000                   1497.000000                   1497.000000           1497.000000             1497.000000         1497.000000                    1497.00000         1497.000000            1497.000000
+mean                          0.482032                         0.395560                                   0.289127                                          0.020944                                        0.003331                                      0.014803                        0.017209                0.905979              0.002480     0.005344           0.996660             2.973280                          0.021376            0.144957            0.025384               0.503674                      0.038076                      0.036072              0.072812                0.019372            0.074816                       0.03006            0.033400             151.784569
+std                           0.236609                         0.223371                                   0.306836                                          0.058359                                        0.033958                                      0.048285                        0.050038                0.150654              0.027954     0.081584           0.057716             0.304743                          0.144683            0.352175            0.157341               0.500154                      0.191444                      0.186532              0.259915                0.137875            0.263183                       0.17081            0.179739             147.131593
+min                           0.000000                         0.000000                                   0.000000                                          0.000000                                        0.000000                                      0.000000                        0.000000                0.000000              0.000000     0.000000           0.000000             0.000000                          0.000000            0.000000            0.000000               0.000000                      0.000000                      0.000000              0.000000                0.000000            0.000000                       0.00000            0.000000               1.000000
+25%                           0.294618                         0.217687                                   0.058722                                          0.001818                                        0.000000                                      0.001049                        0.000000                0.750000              0.000220     0.000000           1.000000             3.000000                          0.000000            0.000000            0.000000               0.000000                      0.000000                      0.000000              0.000000                0.000000            0.000000                       0.00000            0.000000              40.000000
+50%                           0.453258                         0.361395                                   0.155440                                          0.007273                                        0.000000                                      0.003148                        0.002632                1.000000              0.000495     0.000000           1.000000             3.000000                          0.000000            0.000000            0.000000               1.000000                      0.000000                      0.000000              0.000000                0.000000            0.000000                       0.00000            0.000000              97.000000
+75%                           0.576771                         0.530612                                   0.435233                                          0.018182                                        0.001938                                      0.010493                        0.013158                1.000000              0.001211     0.000000           1.000000             3.000000                          0.000000            0.000000            0.000000               1.000000                      0.000000                      0.000000              0.000000                0.000000            0.000000                       0.00000            0.000000             217.000000
+max                           1.000000                         1.000000                                   1.000000                                          1.000000                                        1.000000                                      1.000000                        1.000000                1.000000              1.000000     2.000000           1.000000             4.000000                          1.000000            1.000000            1.000000               1.000000                      1.000000                      1.000000              1.000000                1.000000            1.000000                       1.00000            1.000000             482.500000

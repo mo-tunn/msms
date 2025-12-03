@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package prediction;
+
+// Kitap Satış Tahmin Servisi
+service PredictionService {
+    // Tek bir tahmin isteği
+    rpc Predict(PredictRequest) returns (PredictResponse);
+    
+    // Modelin gerektirdiği özelliklerin listesini döner
+    rpc GetFeatures(Empty) returns (FeaturesResponse);
+    
+    // Sağlık kontrolü
+    rpc HealthCheck(Empty) returns (HealthResponse);
+}
+
+// Boş mesaj (parametre gerektirmeyen istekler için)
+message Empty {}
+
+// Tahmin isteği - tüm feature'ları key-value olarak alır
+message PredictRequest {
+    repeated FeatureEntry features = 1;
+}
+
+message FeatureEntry {
+    bytes key = 1;
+    double value = 2;
+}
+
+// Tahmin yanıtı
+message PredictResponse {
+    bool success = 1;
+    double predicted_sales = 2;
+    string error_message = 3;
+}
+
+// Özellik listesi yanıtı
+message FeaturesResponse {
+    repeated string features = 1;
+}
+
+// Sağlık kontrolü yanıtı
+message HealthResponse {
+    bool healthy = 1;
+    string model_status = 2;
+    string scaler_status = 3;
+}
