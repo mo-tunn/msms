@@ -1,7 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getStudentExams } from '../../services/api';
+import { getAuth } from '../../utils/authUtils';
 
 const HomePage = () => {
+    const [exams, setExams] = useState([]);
+    const [stats, setStats] = useState({
+        tytAvg: 0,
+        aytAvg: 0,
+        totalNetAvg: 0,
+        lastExamNet: 0,
+        lastExamDiff: 0
+    });
+    const user = getAuth().user;
+
+    useEffect(() => {
+        if (user && user.id) {
+            fetchExams(user.id);
+        }
+    }, [user]);
+
+    const fetchExams = async (studentId) => {
+        try {
+            const data = await getStudentExams(studentId);
+            setExams(data);
+            calculateStats(data);
+        } catch (error) {
+            console.error('Error fetching exams:', error);
+        }
+    };
+
+    const calculateStats = (examsData) => {
+        if (!examsData || examsData.length === 0) return;
+
+        const tytExams = examsData.filter(e => e.exam_type === 'TYT');
+        const aytExams = examsData.filter(e => e.exam_type === 'AYT');
+
+        const tytAvg = tytExams.length > 0
+            ? tytExams.reduce((acc, curr) => acc + parseFloat(curr.total_net || 0), 0) / tytExams.length
+            : 0;
+
+        const aytAvg = aytExams.length > 0
+            ? aytExams.reduce((acc, curr) => acc + parseFloat(curr.total_net || 0), 0) / aytExams.length
+            : 0;
+
+        const totalNetAvg = examsData.reduce((acc, curr) => acc + parseFloat(curr.total_net || 0), 0) / examsData.length;
+
+        // Last exam stats
+        const lastExam = examsData[0]; // Assumes sorted by date DESC
+        const previousExam = examsData.length > 1 ? examsData[1] : null;
+        const lastExamNet = parseFloat(lastExam.total_net || 0);
+        const lastExamDiff = previousExam ? lastExamNet - parseFloat(previousExam.total_net || 0) : 0;
+
+        setStats({
+            tytAvg,
+            aytAvg,
+            totalNetAvg,
+            lastExamNet,
+            lastExamDiff
+        });
+    };
+
     // Mock Data for Current Student (Emre) - Consistent with UI
     const studentData = {
         tasksCompleted: 12,
@@ -35,7 +94,7 @@ const HomePage = () => {
         <>
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-8">
                 <div className="flex min-w-72 flex-col gap-2">
-                    <h1 className="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Merhaba, Emre!</h1>
+                    <h1 className="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Merhaba, {user?.first_name || 'Öğrenci'}!</h1>
                     <p className="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Bugün hedeflerine bir adım daha yaklaşmaya hazır mısın?</p>
                 </div>
 
@@ -74,8 +133,8 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className="flex items-end gap-3">
-                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">95.2</p>
-                        <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full mb-1">+1.5 net</span>
+                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{stats.tytAvg.toFixed(1)}</p>
+                        {/* <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full mb-1">+1.5 net</span> */}
                     </div>
                 </div>
 
@@ -87,8 +146,8 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className="flex items-end gap-3">
-                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">68.5</p>
-                        <span className="text-xs font-bold text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full mb-1">-0.5 net</span>
+                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{stats.aytAvg.toFixed(1)}</p>
+                        {/* <span className="text-xs font-bold text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full mb-1">-0.5 net</span> */}
                     </div>
                 </div>
 
@@ -100,8 +159,8 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className="flex items-end gap-3">
-                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">81.85</p>
-                        <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full mb-1">+0.5 net</span>
+                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{stats.totalNetAvg.toFixed(2)}</p>
+                        {/* <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full mb-1">+0.5 net</span> */}
                     </div>
                 </div>
 
@@ -139,42 +198,29 @@ const HomePage = () => {
                             <Link to="/student/sinavlarim" className="text-primary text-sm font-bold hover:underline">Tümünü Gör</Link>
                         </div>
                         <div className="flex flex-col gap-4">
-                            <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800/30 hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors cursor-pointer">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white font-bold text-lg w-12 h-12 flex items-center justify-center border border-gray-100 dark:border-gray-600">
-                                        TYT
+                            {exams.slice(0, 3).map((exam) => (
+                                <div key={exam.id} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800/30 hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors cursor-pointer">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white font-bold text-lg w-12 h-12 flex items-center justify-center border border-gray-100 dark:border-gray-600">
+                                            {exam.exam_type}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-[#111418] dark:text-white">{exam.exam_name}</p>
+                                            <p className="text-sm text-[#617589] dark:text-gray-400 flex items-center gap-1">
+                                                <span className="material-symbols-outlined text-[14px]">calendar_today</span>
+                                                {new Date(exam.exam_date).toLocaleDateString()}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-bold text-[#111418] dark:text-white">Genel Deneme - 5</p>
-                                        <p className="text-sm text-[#617589] dark:text-gray-400 flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-[14px]">calendar_today</span>
-                                            24 Mayıs 2024
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-black text-xl text-[#111418] dark:text-white">102.75</p>
-                                    <p className="text-xs font-bold text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full inline-block">+3.25 net</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800/30 hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors cursor-pointer">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white font-bold text-lg w-12 h-12 flex items-center justify-center border border-gray-100 dark:border-gray-600">
-                                        AYT
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-[#111418] dark:text-white">Sayısal Deneme - 4</p>
-                                        <p className="text-sm text-[#617589] dark:text-gray-400 flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-[14px]">calendar_today</span>
-                                            22 Mayıs 2024
-                                        </p>
+                                    <div className="text-right">
+                                        <p className="font-black text-xl text-[#111418] dark:text-white">{parseFloat(exam.total_net).toFixed(2)}</p>
+                                        <p className="text-xs font-bold text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full inline-block">Net</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="font-black text-xl text-[#111418] dark:text-white">65.50</p>
-                                    <p className="text-xs font-bold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded-full inline-block">-1.00 net</p>
-                                </div>
-                            </div>
+                            ))}
+                            {exams.length === 0 && (
+                                <p className="text-center text-gray-500 dark:text-gray-400 py-4">Henüz sınav kaydı bulunmamaktadır.</p>
+                            )}
                         </div>
                     </div>
 

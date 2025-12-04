@@ -262,3 +262,53 @@ export const predictBookSales = async (data) => {
 
     return response.json();
 };
+
+export const createExam = async (examData) => {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/exams`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(examData),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to create exam');
+    }
+
+    return response.json();
+};
+
+export const getStudentExams = async (studentId) => {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/exams/${studentId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch exams');
+    }
+
+    return response.json();
+};
+
+export const getExamDetail = async (examId) => {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/exams/detail/${examId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch exam details');
+    }
+
+    return response.json();
+};
+
+

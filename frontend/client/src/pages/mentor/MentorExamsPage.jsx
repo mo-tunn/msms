@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { getMentorStudents, createExam, getStudentExams } from '../../services/api';
 
 const MentorExamsPage = () => {
-    const [selectedStudent, setSelectedStudent] = useState('1');
-
-    const students = [
-        { id: '1', name: 'Ahmet Yılmaz' },
-        { id: '2', name: 'Ayşe Demir' },
-        { id: '3', name: 'Mehmet Kaya' },
-    ];
-
-    const [exams, setExams] = useState([
-        { id: 1, name: 'TYT Deneme 1', date: '2023-10-15', score: 380, net: 75.5, category: 'TYT' },
-        { id: 2, name: 'AYT Deneme 1', date: '2023-10-22', score: 320, net: 45.0, category: 'AYT' },
-        { id: 3, name: 'TYT Deneme 2', date: '2023-11-05', score: 410, net: 82.0, category: 'TYT' },
-    ]);
+    const [selectedStudent, setSelectedStudent] = useState('');
+    const [students, setStudents] = useState([]);
+    const [exams, setExams] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     // Form State
     const [examName, setExamName] = useState('');
     const [examDate, setExamDate] = useState('');
     const [examCategory, setExamCategory] = useState('TYT');
     const [examScore, setExamScore] = useState('');
+
     const [subjectStats, setSubjectStats] = useState({});
     const [topicDetails, setTopicDetails] = useState([]);
 
@@ -35,6 +28,16 @@ const MentorExamsPage = () => {
 
     const currentSubjects = examCategory === 'TYT' ? tytSubjects : aytSubjects;
 
+    useEffect(() => {
+        fetchStudents();
+    }, []);
+
+    useEffect(() => {
+        if (selectedStudent) {
+            fetchExams(selectedStudent);
+        }
+    }, [selectedStudent]);
+
     // Initialize subject stats when category changes
     useEffect(() => {
         const initialStats = {};
@@ -45,6 +48,34 @@ const MentorExamsPage = () => {
         setTopicDetails([]); // Clear topics on category change
         setSelectedTopicSubject(currentSubjects[0]);
     }, [examCategory]);
+
+    const fetchStudents = async () => {
+        try {
+            const data = await getMentorStudents();
+            setStudents(data);
+            if (data.length > 0) {
+                setSelectedStudent(data[0].id);
+            }
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
+    };
+
+    const fetchExams = async (studentId) => {
+        setLoading(true);
+        try {
+            const data = await getStudentExams(studentId);
+            setExams(data);
+        } catch (error) {
+            console.error('Error fetching exams:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
 
     const handleStatChange = (subject, field, value) => {
         const val = value === '' ? '' : parseInt(value) || 0;
@@ -88,29 +119,59 @@ const MentorExamsPage = () => {
         setTopicDetails(topicDetails.filter(t => t.id !== id));
     };
 
-    const handleAddExam = (e) => {
+    const handleAddExam = async (e) => {
         e.preventDefault();
-        const newExam = {
-            id: Date.now(),
-            name: examName,
-            date: examDate,
-            category: examCategory,
-            score: parseFloat(examScore),
-            net: calculateTotalNet(),
-            details: {
-                subjects: subjectStats,
-                topics: topicDetails
-            }
+
+        if (!selectedStudent) {
+            alert('Lütfen bir öğrenci seçin.');
+            return;
+        }
+
+        // Prepare details array
+        const details = currentSubjects.map(subject => {
+            const stats = subjectStats[subject];
+            const matchingTopics = topicDetails.filter(t => t.subject === subject);
+
+            const subjectTopics = matchingTopics.map(t => ({
+                topicName: t.name,
+                correctCount: t.correct,
+                wrongCount: t.wrong,
+                emptyCount: t.empty
+            }));
+
+            return {
+                lessonName: subject,
+                correctCount: stats.correct || 0,
+                wrongCount: stats.wrong || 0,
+                emptyCount: stats.empty || 0,
+                topics: subjectTopics
+            };
+        });
+
+        const examData = {
+            studentId: selectedStudent,
+            examName,
+            examType: examCategory,
+            examDate,
+            details
         };
 
-        setExams([newExam, ...exams]);
-        alert('Sınav sonucu başarıyla eklendi!');
+        try {
+            await createExam(examData);
+            alert('Sınav sonucu başarıyla eklendi!');
 
-        // Reset Form
-        setExamName('');
-        setExamDate('');
-        setExamScore('');
-        setExamCategory('TYT'); // Will trigger useEffect to reset stats
+            // Reset Form
+            setExamName('');
+            setExamDate('');
+            setExamScore('');
+            setExamCategory('TYT'); // Will trigger useEffect to reset stats
+
+            // Refresh exams
+            fetchExams(selectedStudent);
+        } catch (error) {
+            console.error('Error creating exam:', error);
+            alert('Sınav eklenirken bir hata oluştu.');
+        }
     };
 
     return (
@@ -129,7 +190,9 @@ const MentorExamsPage = () => {
                         className="bg-gray-50 dark:bg-gray-700 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary py-2 pl-3 pr-8"
                     >
                         {students.map(student => (
-                            <option key={student.id} value={student.id}>{student.name}</option>
+                            <option key={student.id} value={student.id}>
+                                {student.first_name} {student.last_name}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -175,17 +238,7 @@ const MentorExamsPage = () => {
                                         <option value="AYT">AYT</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Toplam Puan</label>
-                                    <input
-                                        required
-                                        type="number"
-                                        value={examScore}
-                                        onChange={(e) => setExamScore(e.target.value)}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-3 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                        placeholder="0-500"
-                                    />
-                                </div>
+                                {/* Score input removed as it's not in DB schema, or could be kept for UI but not saved */}
                             </div>
 
                             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -325,40 +378,37 @@ const MentorExamsPage = () => {
                     {/* Stats Cards */}
                     <div className="grid grid-cols-1 gap-4">
                         <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Ortalama Puan</p>
-                            <p className="text-2xl font-bold text-primary mt-1">370.0</p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Ortalama Net</p>
-                            <p className="text-2xl font-bold text-green-600 mt-1">67.5</p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                             <p className="text-sm text-gray-500 dark:text-gray-400">Toplam Sınav</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{exams.length}</p>
                         </div>
                     </div>
 
-                    {/* Recent Exams List (Simplified) */}
+                    {/* Recent Exams List */}
                     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <h3 className="font-bold text-gray-900 dark:text-white">Son Eklenenler</h3>
                         </div>
-                        <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {exams.map((exam) => (
-                                <div key={exam.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <h4 className="font-bold text-gray-900 dark:text-white">{exam.name}</h4>
-                                        <span className="text-xs font-bold px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{exam.category}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
-                                        <span>{exam.date}</span>
-                                        <div className="flex gap-3">
-                                            <span className="font-medium text-primary">{exam.score} Puan</span>
-                                            <span className="font-medium text-green-600">{exam.net.toFixed(2)} Net</span>
+                        <div className="divide-y divide-gray-200 dark:divide-gray-700 max-h-[600px] overflow-y-auto">
+                            {loading ? (
+                                <p className="p-4 text-center text-gray-500">Yükleniyor...</p>
+                            ) : exams.length === 0 ? (
+                                <p className="p-4 text-center text-gray-500">Henüz sınav kaydı yok.</p>
+                            ) : (
+                                exams.map((exam) => (
+                                    <div key={exam.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h4 className="font-bold text-gray-900 dark:text-white">{exam.exam_name}</h4>
+                                            <span className="text-xs font-bold px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{exam.exam_type}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                                            <span>{new Date(exam.exam_date).toLocaleDateString()}</span>
+                                            <span className="font-medium text-green-600">
+                                                {exam.total_net ? Number(exam.total_net).toFixed(2) : '0.00'} Net
+                                            </span>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
