@@ -17,6 +17,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/mentor', require('./routes/mentorRoutes'));
 app.use('/api/exams', require('./routes/examRoutes'));
+app.use('/api/meetings', require('./routes/meetingRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.post('/api/ai/predict', require('./controllers/AIController').predictSales);
 
 // Health Check

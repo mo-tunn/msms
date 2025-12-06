@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { getAuth, clearAuth } from '../utils/authUtils';
+import { getUnreadNotificationCount } from '../services/api';
 
 const DashboardLayout = () => {
     const [isAiMenuOpen, setIsAiMenuOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [unreadCount, setUnreadCount] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const auth = getAuth();
         if (auth) {
             setUser(auth.user);
+            // Fetch unread notification count
+            fetchUnreadCount(auth.user.id);
         }
     }, []);
+
+    // Refresh unread count when navigating away from notifications page
+    useEffect(() => {
+        if (user && !location.pathname.includes('/student/bildirimler')) {
+            fetchUnreadCount(user.id);
+        }
+    }, [location.pathname, user]);
+
+    const fetchUnreadCount = async (userId) => {
+        try {
+            const data = await getUnreadNotificationCount(userId);
+            setUnreadCount(data.count || 0);
+        } catch (error) {
+            console.error('Error fetching unread count:', error);
+        }
+    };
 
     const handleLogout = () => {
         clearAuth();
@@ -164,10 +184,15 @@ const DashboardLayout = () => {
                             <NavLink
                                 to="/student/bildirimler"
                                 className={({ isActive }) =>
-                                    `flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-transparent hover:bg-[#f0f2f4] dark:hover:bg-[#202932] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 ${isActive ? 'bg-[#f0f2f4] dark:bg-[#202932] text-primary dark:text-primary' : ''}`
+                                    `relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-visible rounded-lg h-10 w-10 bg-transparent hover:bg-[#f0f2f4] dark:hover:bg-[#202932] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 ${isActive ? 'bg-[#f0f2f4] dark:bg-[#202932] text-primary dark:text-primary' : ''}`
                                 }
                             >
                                 <span className="material-symbols-outlined">notifications</span>
+                                {unreadCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full shadow-sm">
+                                        {unreadCount > 99 ? '99+' : unreadCount}
+                                    </span>
+                                )}
                             </NavLink>
                             <NavLink to="/student/profilim" className="flex items-center gap-3 cursor-pointer p-1 rounded-lg hover:bg-[#f0f2f4] dark:hover:bg-[#202932]">
                                 <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold overflow-hidden">
