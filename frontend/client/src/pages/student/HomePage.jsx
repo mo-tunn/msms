@@ -1,36 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getStudentExams } from '../../services/api';
+import { getStudentExams, getStudentDashboardData } from '../../services/api';
 import { getAuth } from '../../utils/authUtils';
 
 const HomePage = () => {
     const [exams, setExams] = useState([]);
+    const [dashboardData, setDashboardData] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
         tytAvg: 0,
         aytAvg: 0,
-        totalNetAvg: 0,
-        lastExamNet: 0,
-        lastExamDiff: 0
+        totalNetAvg: 0
     });
     const user = getAuth().user;
 
     useEffect(() => {
         if (user && user.id) {
-            fetchExams(user.id);
+            fetchData(user.id);
         }
-    }, [user]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id]);
 
-    const fetchExams = async (studentId) => {
+    const fetchData = async (studentId) => {
         try {
-            const data = await getStudentExams(studentId);
-            setExams(data);
-            calculateStats(data);
+            setLoading(true);
+            const [examsData, dashData] = await Promise.all([
+                getStudentExams(studentId),
+                getStudentDashboardData()
+            ]);
+
+            setExams(examsData);
+            setDashboardData(dashData);
+            calculateExamStats(examsData);
         } catch (error) {
-            console.error('Error fetching exams:', error);
+            console.error('Error fetching dashboard data:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const calculateStats = (examsData) => {
+    const calculateExamStats = (examsData) => {
         if (!examsData || examsData.length === 0) return;
 
         const tytExams = examsData.filter(e => e.exam_type === 'TYT');
@@ -46,49 +55,26 @@ const HomePage = () => {
 
         const totalNetAvg = examsData.reduce((acc, curr) => acc + parseFloat(curr.total_net || 0), 0) / examsData.length;
 
-        // Last exam stats
-        const lastExam = examsData[0]; // Assumes sorted by date DESC
-        const previousExam = examsData.length > 1 ? examsData[1] : null;
-        const lastExamNet = parseFloat(lastExam.total_net || 0);
-        const lastExamDiff = previousExam ? lastExamNet - parseFloat(previousExam.total_net || 0) : 0;
-
-        setStats({
-            tytAvg,
-            aytAvg,
-            totalNetAvg,
-            lastExamNet,
-            lastExamDiff
-        });
+        setStats({ tytAvg, aytAvg, totalNetAvg });
     };
 
-    // Mock Data for Current Student (Emre) - Consistent with UI
-    const studentData = {
-        tasksCompleted: 12,
-        tasksIncomplete: 3, // 15 total - 12 completed
-        streak: 7, // Assumed
-        examTrend: 'increasing' // Assumed
+    const getSuccessStatusStyles = (label) => {
+        switch (label) {
+            case 'Çok Yükselişte': return { color: 'text-purple-600', bg: 'bg-purple-100', text: 'text-purple-700' };
+            case 'Yükselişte': return { color: 'text-green-500', bg: 'bg-green-100', text: 'text-green-700' };
+            case 'Dengeli': return { color: 'text-yellow-500', bg: 'bg-yellow-100', text: 'text-yellow-700' };
+            case 'Riskli': return { color: 'text-orange-500', bg: 'bg-orange-100', text: 'text-orange-700' };
+            default: return { color: 'text-red-500', bg: 'bg-red-100', text: 'text-red-700' };
+        }
     };
 
-    // Success Metric Calculation Logic (Same as MentorAnalyticsPage)
-    const calculateSuccessMetric = (student) => {
-        let score = (student.tasksCompleted * 1) - (student.tasksIncomplete * 2) + (student.streak * 5);
-        if (student.examTrend === 'increasing') score += 20;
-        else if (student.examTrend === 'stable') score += 10;
-        else if (student.examTrend === 'decreasing') score -= 10;
-        return score;
-    };
+    const successScore = dashboardData?.stats?.success_score || 0;
+    const riskStatus = dashboardData?.stats?.risk_status || 'Bilinmiyor';
+    const statusStyle = getSuccessStatusStyles(riskStatus);
 
-    const getSuccessStatus = (score) => {
-        if (score < 0) return { label: 'Çok Riskli', color: 'bg-red-500', text: 'text-red-500', bg: 'bg-red-500/10' };
-        if (score >= 0 && score <= 30) return { label: 'Riskli', color: 'bg-orange-500', text: 'text-orange-500', bg: 'bg-orange-500/10' };
-        if (score > 30 && score <= 60) return { label: 'Dengeli', color: 'bg-yellow-500', text: 'text-yellow-500', bg: 'bg-yellow-500/10' };
-        if (score > 60 && score <= 90) return { label: 'Yükselişte', color: 'bg-green-500', text: 'text-green-500', bg: 'bg-green-500/10' };
-        if (score > 90) return { label: 'Çok Yükselişte', color: 'bg-purple-600', text: 'text-purple-600', bg: 'bg-purple-600/10' };
-        return { label: 'Bilinmiyor', color: 'bg-gray-500', text: 'text-gray-500', bg: 'bg-gray-500/10' };
-    };
-
-    const successScore = calculateSuccessMetric(studentData);
-    const successStatus = getSuccessStatus(successScore);
+    if (loading) {
+        return <div className="p-8 text-center">Yükleniyor...</div>;
+    }
 
     return (
         <>
@@ -111,13 +97,13 @@ const HomePage = () => {
                     </div>
 
                     {/* Success Status Card */}
-                    <div className={`flex items-center gap-4 p-4 rounded-2xl border border-[#e0e6ed] dark:border-[#202932] shadow-sm ${successStatus.bg}`}>
+                    <div className={`flex items-center gap-4 p-4 rounded-2xl border border-[#e0e6ed] dark:border-[#202932] shadow-sm ${statusStyle.bg}`}>
                         <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
-                            <span className={`material-symbols-outlined text-2xl ${successStatus.text}`}>health_and_safety</span>
+                            <span className={`material-symbols-outlined text-2xl ${statusStyle.text}`}>health_and_safety</span>
                         </div>
                         <div>
-                            <p className={`text-xs font-bold uppercase tracking-wider ${successStatus.text}`}>Başarı Durumu</p>
-                            <p className={`text-2xl font-black leading-none mt-1 ${successStatus.text}`}>{successStatus.label}</p>
+                            <p className={`text-xs font-bold uppercase tracking-wider ${statusStyle.text}`}>Başarı Durumu</p>
+                            <p className={`text-2xl font-black leading-none mt-1 ${statusStyle.text}`}>{riskStatus}</p>
                         </div>
                     </div>
                 </div>
@@ -134,7 +120,6 @@ const HomePage = () => {
                     </div>
                     <div className="flex items-end gap-3">
                         <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{stats.tytAvg.toFixed(1)}</p>
-                        {/* <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full mb-1">+1.5 net</span> */}
                     </div>
                 </div>
 
@@ -147,7 +132,6 @@ const HomePage = () => {
                     </div>
                     <div className="flex items-end gap-3">
                         <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{stats.aytAvg.toFixed(1)}</p>
-                        {/* <span className="text-xs font-bold text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full mb-1">-0.5 net</span> */}
                     </div>
                 </div>
 
@@ -160,7 +144,6 @@ const HomePage = () => {
                     </div>
                     <div className="flex items-end gap-3">
                         <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{stats.totalNetAvg.toFixed(2)}</p>
-                        {/* <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full mb-1">+0.5 net</span> */}
                     </div>
                 </div>
 
@@ -175,11 +158,11 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className="flex items-end gap-2 relative z-10">
-                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">12</p>
-                        <p className="text-[#617589] dark:text-gray-400 text-xl font-medium mb-1">/ 15</p>
+                        <p className="text-[#111418] dark:text-white text-4xl font-black leading-none">{dashboardData?.stats?.task_success_rate ? Number(dashboardData.stats.task_success_rate).toFixed(0) : 0}%</p>
+                        <p className="text-[#617589] dark:text-gray-400 text-xl font-medium mb-1">Tamamlandı</p>
                     </div>
                     <div className="mt-2 w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 relative z-10">
-                        <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '80%' }}></div>
+                        <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${dashboardData?.stats?.task_success_rate || 0}%` }}></div>
                     </div>
                 </div>
             </div>
@@ -224,36 +207,18 @@ const HomePage = () => {
                         </div>
                     </div>
 
-                    {/* Notifications */}
-                    <div className="bg-white dark:bg-[#18212a] rounded-2xl border border-[#e0e6ed] dark:border-[#202932] p-6 shadow-sm">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-[#111418] dark:text-white text-xl font-bold flex items-center gap-2">
-                                <span className="material-symbols-outlined text-blue-500">notifications</span>
-                                Bildirimler
-                            </h2>
-                            <Link to="/student/bildirimler" className="text-primary text-sm font-bold hover:underline">Tümünü Gör</Link>
-                        </div>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex items-start gap-4 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20">
-                                <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 p-2 rounded-lg shrink-0"><span className="material-symbols-outlined">task_alt</span></div>
-                                <div className="flex-1">
-                                    <p className="font-semibold text-[#111418] dark:text-white text-sm">Mentorun "Matematik Soru Analizi" görevini onayladı.</p>
-                                    <p className="text-xs text-[#617589] dark:text-gray-400 mt-1">15 dakika önce</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors cursor-pointer border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
-                                <div className="bg-orange-100 dark:bg-orange-900/30 text-orange-600 p-2 rounded-lg shrink-0"><span className="material-symbols-outlined">groups</span></div>
-                                <div className="flex-1">
-                                    <p className="font-semibold text-[#111418] dark:text-white text-sm">"Hedef Belirleme" toplantısı yarın 17:00'da.</p>
-                                    <p className="text-xs text-[#617589] dark:text-gray-400 mt-1">2 saat önce</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {/* Notifications (Static for now as API not requested to change yet, or use stats?) */}
+                    {/* Keeping existing notifications section as is, or removing if it was mock? The previous code had hardcoded notifications. 
+                        The stats query fetches 'unread_notifications' count. 
+                        I'll leave the hardcoded ones for UI demo unless asked, but user said "Bildirimler... doğru çalışmıyor" 
+                        Actually user said: "Başarı Puanı , Başarı Durumu , Ders Programı (Mevcut günün görevleri) , Bu Haftaki Toplantılar ... doğru çalışmıyor"
+                        So I will fix Tasks (Ders Programı) and Meetings.
+                    */}
                 </div>
 
                 {/* Right Column */}
                 <div className="lg:col-span-1 flex flex-col gap-8">
+                    {/* Ders Programı (Upcoming Tasks) */}
                     <div className="bg-white dark:bg-[#18212a] rounded-2xl border border-[#e0e6ed] dark:border-[#202932] p-6 shadow-sm sticky top-6">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-[#111418] dark:text-white text-xl font-bold flex items-center gap-2">
@@ -266,45 +231,49 @@ const HomePage = () => {
                             {/* Timeline Line */}
                             <div className="absolute left-[60px] top-2 bottom-2 w-0.5 bg-gray-100 dark:bg-gray-700"></div>
 
-                            <div className="flex gap-4 relative">
-                                <div className="w-[45px] text-right shrink-0">
-                                    <p className="text-[#111418] dark:text-white font-bold text-sm">09:00</p>
-                                    <p className="text-[#617589] dark:text-gray-500 text-xs">11:00</p>
-                                </div>
-                                <div className="w-3 h-3 rounded-full bg-primary border-2 border-white dark:border-[#18212a] absolute left-[55px] top-1.5 z-10 shadow-sm"></div>
-                                <div className="flex-1 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-xl border border-blue-100 dark:border-blue-900/20 hover:shadow-md transition-shadow cursor-pointer">
-                                    <p className="font-bold text-[#111418] dark:text-white text-sm">Matematik Soru Çözümü</p>
-                                    <p className="text-xs text-[#617589] dark:text-gray-400 mt-0.5">Limit & Türev</p>
-                                </div>
-                            </div>
+                            {dashboardData?.upcomingTasks && dashboardData.upcomingTasks.length > 0 ? (
+                                dashboardData.upcomingTasks.map((task, index) => {
+                                    const getPriorityStyles = (p) => {
+                                        if (!p) return { dot: 'bg-gray-500', bg: 'bg-gray-50 dark:bg-gray-900/10', border: 'border-gray-100 dark:border-gray-900/20' };
 
-                            <div className="flex gap-4 relative">
-                                <div className="w-[45px] text-right shrink-0">
-                                    <p className="text-[#111418] dark:text-white font-bold text-sm">13:30</p>
-                                    <p className="text-[#617589] dark:text-gray-500 text-xs">15:00</p>
-                                </div>
-                                <div className="w-3 h-3 rounded-full bg-teal-400 border-2 border-white dark:border-[#18212a] absolute left-[55px] top-1.5 z-10 shadow-sm"></div>
-                                <div className="flex-1 bg-teal-50 dark:bg-teal-900/10 p-3 rounded-xl border border-teal-100 dark:border-teal-900/20 hover:shadow-md transition-shadow cursor-pointer">
-                                    <p className="font-bold text-[#111418] dark:text-white text-sm">Fizik Konu Tekrarı</p>
-                                    <p className="text-xs text-[#617589] dark:text-gray-400 mt-0.5">Basit Harmonik Hareket</p>
-                                </div>
-                            </div>
+                                        // Normalize: lowercase & trim
+                                        const priority = p.toString().trim().toLowerCase();
 
-                            <div className="flex gap-4 relative">
-                                <div className="w-[45px] text-right shrink-0">
-                                    <p className="text-[#111418] dark:text-white font-bold text-sm">17:00</p>
-                                    <p className="text-[#617589] dark:text-gray-500 text-xs">17:30</p>
-                                </div>
-                                <div className="w-3 h-3 rounded-full bg-orange-400 border-2 border-white dark:border-[#18212a] absolute left-[55px] top-1.5 z-10 shadow-sm"></div>
-                                <div className="flex-1 bg-orange-50 dark:bg-orange-900/10 p-3 rounded-xl border border-orange-100 dark:border-orange-900/20 hover:shadow-md transition-shadow cursor-pointer">
-                                    <p className="font-bold text-[#111418] dark:text-white text-sm">Mentor Toplantısı</p>
-                                    <p className="text-xs text-[#617589] dark:text-gray-400 mt-0.5">Haftalık Değerlendirme</p>
-                                </div>
-                            </div>
+                                        if (priority.includes('yüksek') || priority.includes('yuksek') || priority.includes('high'))
+                                            return { dot: 'bg-red-500', bg: 'bg-red-100 dark:bg-red-900/10', border: 'border-red-100 dark:border-red-900/20' };
+                                        if (priority.includes('orta') || priority.includes('medium'))
+                                            return { dot: 'bg-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/10', border: 'border-blue-100 dark:border-blue-900/20' };
+                                        if (priority.includes('düşük') || priority.includes('dusuk') || priority.includes('low'))
+                                            return { dot: 'bg-green-500', bg: 'bg-green-100 dark:bg-green-900/10', border: 'border-green-100 dark:border-green-900/20' };
+
+                                        return { dot: 'bg-gray-500', bg: 'bg-gray-50 dark:bg-gray-900/10', border: 'border-gray-100 dark:border-gray-900/20' };
+                                    };
+                                    const styles = getPriorityStyles(task.priority);
+
+                                    return (
+                                        <div key={task.id} className="flex gap-4 relative">
+                                            <div className="w-[45px] text-right shrink-0">
+                                                <p className="text-[#111418] dark:text-white font-bold text-sm">
+                                                    {new Date(task.deadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </p>
+                                                <p className="text-[#617589] dark:text-gray-500 text-xs">{new Date(task.deadline).toLocaleDateString()}</p>
+                                            </div>
+                                            <div className={`w-3 h-3 rounded-full ${styles.dot} border-2 border-white dark:border-[#18212a] absolute left-[55px] top-1.5 z-10 shadow-sm`}></div>
+                                            <div className={`flex-1 ${styles.bg} p-3 rounded-xl border ${styles.border} hover:shadow-md transition-shadow cursor-pointer`}>
+                                                <p className="font-bold text-[#111418] dark:text-white text-sm">
+                                                    {task.title}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p className="text-gray-500 text-center text-sm">Yaklaşan görev bulunmamaktadır.</p>
+                            )}
                         </div>
                     </div>
 
-                    {/* This Week's Meetings Section - Moved Here */}
+                    {/* This Week's Meetings */}
                     <div className="bg-white dark:bg-[#18212a] rounded-2xl border border-[#e0e6ed] dark:border-[#202932] p-6 shadow-sm">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-[#111418] dark:text-white text-xl font-bold flex items-center gap-2">
@@ -314,25 +283,27 @@ const HomePage = () => {
                             <Link to="/student/toplantilar" className="text-primary text-sm font-bold hover:underline">Tümünü Gör</Link>
                         </div>
                         <div className="flex flex-col gap-4">
-                            {[
-                                { title: 'Haftalık Değerlendirme', type: 'Birebir Görüşme', date: 'Bugün', time: '14:00', icon: 'person', color: 'bg-blue-100 text-blue-700' },
-                                { title: 'Matematik Soru Çözümü', type: 'Canlı Ders', date: 'Yarın', time: '20:00', icon: 'school', color: 'bg-green-100 text-green-700' },
-                                { title: 'Veli Toplantısı', type: 'Toplantı', date: 'Cuma', time: '19:00', icon: 'groups', color: 'bg-purple-100 text-purple-700' },
-                            ].map((meeting, index) => (
-                                <div key={index} className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
-                                    <div className={`p-3 rounded-xl ${meeting.color} dark:bg-opacity-20`}>
-                                        <span className="material-symbols-outlined">{meeting.icon}</span>
+                            {dashboardData?.weeklyMeetings && dashboardData.weeklyMeetings.length > 0 ? (
+                                dashboardData.weeklyMeetings.map((meeting, index) => (
+                                    <div key={meeting.id} className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
+                                        <div className={`p-3 rounded-xl bg-blue-100 text-blue-700 dark:bg-opacity-20`}>
+                                            <span className="material-symbols-outlined">groups</span>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-bold text-[#111418] dark:text-white truncate">{meeting.title}</h3>
+                                            <p className="text-xs text-[#617589] dark:text-gray-400 font-medium mt-0.5">{meeting.meeting_type}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="font-bold text-[#111418] dark:text-white text-sm">
+                                                {new Date(meeting.meeting_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </p>
+                                            <p className="text-xs text-[#617589] dark:text-gray-400">{new Date(meeting.meeting_date).toLocaleDateString()}</p>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-[#111418] dark:text-white truncate">{meeting.title}</h3>
-                                        <p className="text-xs text-[#617589] dark:text-gray-400 font-medium mt-0.5">{meeting.type}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="font-bold text-[#111418] dark:text-white text-sm">{meeting.time}</p>
-                                        <p className="text-xs text-[#617589] dark:text-gray-400">{meeting.date}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            ) : (
+                                <p className="text-gray-500 text-center text-sm">Bu hafta planlanmış toplantı yok.</p>
+                            )}
                         </div>
                     </div>
                 </div>

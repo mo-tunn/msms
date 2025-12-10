@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getStudentExams } from '../../services/api';
 import { getAuth } from '../../utils/authUtils';
 
-const ExamsPage = ({ embedded = false, onExamClick }) => {
+const ExamsPage = ({ embedded = false, onExamClick, studentId = null }) => {
     const navigate = useNavigate();
     const [exams, setExams] = useState([]);
     const [filter, setFilter] = useState('Tümü');
@@ -15,10 +15,11 @@ const ExamsPage = ({ embedded = false, onExamClick }) => {
     const user = getAuth().user;
 
     useEffect(() => {
-        if (user && user.id) {
-            fetchExams(user.id);
+        const targetId = studentId || (user && user.id);
+        if (targetId) {
+            fetchExams(targetId);
         }
-    }, [user]);
+    }, [user, studentId]);
 
     const fetchExams = async (studentId) => {
         try {

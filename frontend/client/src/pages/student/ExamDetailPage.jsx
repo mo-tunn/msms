@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { getExamDetail } from '../../services/api';
 
-const ExamDetailPage = ({ embedded = false, onBack }) => {
+const ExamDetailPage = ({ embedded = false, onBack, examId = null }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [exam, setExam] = useState(null);
@@ -10,10 +10,11 @@ const ExamDetailPage = ({ embedded = false, onBack }) => {
     const [chartType, setChartType] = useState('bar');
 
     useEffect(() => {
-        if (id) {
-            fetchExamDetails(id);
+        const targetId = examId || id;
+        if (targetId) {
+            fetchExamDetails(targetId);
         }
-    }, [id]);
+    }, [id, examId]);
 
     const fetchExamDetails = async (examId) => {
         try {
@@ -34,20 +35,54 @@ const ExamDetailPage = ({ embedded = false, onBack }) => {
         return <div className="p-8 text-center">Sınav bulunamadı.</div>;
     }
 
-    // Prepare data for charts/lists
-    // exam.details contains lessons.
-    // We need to map them to the format expected by the UI.
-    const subjectData = exam.details.map(detail => ({
+    // Colors for the chart
+    const COLORS = [
+        '#3b82f6', // blue-500
+        '#ef4444', // red-500
+        '#10b981', // green-500
+        '#f59e0b', // amber-500
+        '#8b5cf6', // violet-500
+        '#ec4899', // pink-500
+        '#06b6d4', // cyan-500
+        '#6366f1', // indigo-500
+        '#84cc16', // lime-500
+        '#f97316', // orange-500
+    ];
+
+    const subjectData = exam.details.map((detail, index) => ({
         label: detail.lesson_name,
         short: detail.lesson_name.substring(0, 3) + '.', // Simple short name
         net: parseFloat(detail.net),
         correct: detail.correct_count,
         wrong: detail.wrong_count,
         empty: detail.empty_count,
-        // Assign colors based on lesson name or random/cycle
-        color: 'text-blue-500',
-        bg: 'bg-blue-500' // Simplified for now, could use a mapping function
+        color: COLORS[index % COLORS.length], // Cycle through colors
+        bg: `bg-[${COLORS[index % COLORS.length]}]` // Note: arbitrary values might need safelist or style prop. For bars we'll stick to a simpler approach below or use style attribute.
     }));
+
+    // Calculate generic bar style helpers since Tailwind dynamic classes can be tricky
+    const subjectDataWithStyles = subjectData.map(item => ({
+        ...item,
+        barStyle: { backgroundColor: item.color }
+    }));
+
+    // Prepare Pie Chart Data
+    const totalPositiveNet = Math.max(0, subjectData.reduce((acc, curr) => acc + Math.max(0, curr.net), 0));
+
+    let currentAngle = 0;
+    const pieChartData = subjectData.map(item => {
+        // Treat negative net as 0 for chart visualization purposes to avoid breaking the pie
+        const validNet = Math.max(0, item.net);
+        const percent = totalPositiveNet > 0 ? (validNet / totalPositiveNet) * 100 : 0;
+
+        currentAngle += percent;
+
+        return {
+            ...item,
+            percent,
+            endAngle: currentAngle
+        };
+    });
 
     // Collect all topics from all lessons
     const allTopics = [];
@@ -190,12 +225,15 @@ const ExamDetailPage = ({ embedded = false, onBack }) => {
                 <div className="min-h-[300px] flex flex-col justify-center">
                     {chartType === 'bar' ? (
                         <div className="flex items-end gap-3 sm:gap-6 h-64 px-2">
-                            {subjectData.map((item, index) => (
+                            {subjectDataWithStyles.map((item, index) => (
                                 <div key={index} className="flex flex-col items-center flex-1 h-full justify-end gap-3 group">
                                     <div className="w-full relative flex items-end justify-center h-full">
                                         <div
-                                            className={`w-full max-w-[48px] ${item.bg} opacity-80 hover:opacity-100 rounded-t-xl transition-all duration-300 relative group-hover:scale-y-105 origin-bottom`}
-                                            style={{ height: `${Math.min((item.net / 40) * 100, 100)}%` }} // Assuming max 40 net for visualization scale
+                                            className="w-full max-w-[48px] opacity-80 hover:opacity-100 rounded-t-xl transition-all duration-300 relative group-hover:scale-y-105 origin-bottom"
+                                            style={{
+                                                height: `${Math.min((item.net / 40) * 100, 100)}%`,
+                                                backgroundColor: item.color
+                                            }}
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-t-xl"></div>
                                         </div>
@@ -209,9 +247,37 @@ const ExamDetailPage = ({ embedded = false, onBack }) => {
                             ))}
                         </div>
                     ) : (
-                        <div className="flex flex-col md:flex-row items-center justify-around gap-8">
-                            {/* Pie Chart Placeholder - Conic gradient is complex to dynamic generate without a library, using simple placeholder or list */}
-                            <div className="text-center text-gray-500">Pasta grafik şu an için devre dışı.</div>
+                        <div className="flex flex-col md:flex-row items-center justify-around gap-8 w-full">
+                            {/* Pie Chart */}
+                            <div className="relative size-64 shadow-lg rounded-full shrink-0"
+                                style={{
+                                    background: `conic-gradient(${pieChartData.map(d => `${d.color} 0 ${d.endAngle}%`).join(', ')})`
+                                }}
+                            >
+                                {/* Inner Circle for Donut Effect */}
+                                <div className="absolute inset-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-inner">
+                                    <div className="text-center p-4">
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Toplam Net</p>
+                                        <p className="text-4xl font-black text-gray-900 dark:text-white">{exam.totalNet.toFixed(1)}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Legend */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 w-full max-w-md">
+                                {pieChartData.map((item, index) => (
+                                    <div key={index} className="flex items-center justify-between gap-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-700/30 rounded-lg transition-colors">
+                                        <div className="flex items-center gap-3">
+                                            <div className="size-4 rounded-full shadow-sm" style={{ backgroundColor: item.color }}></div>
+                                            <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{item.label}</span>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="text-sm font-bold text-gray-900 dark:text-white">{item.net} Net</span>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400 block">{item.percent.toFixed(1)}%</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>

@@ -5,51 +5,50 @@ const HelpPage = () => {
         <div className="max-w-4xl mx-auto space-y-8 pb-10">
             <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Paneli Nasıl Kullanırım?</h1>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">MSMS panelindeki özellikleri en verimli şekilde kullanmanız için hazırladığımız rehber.</p>
+                <p className="text-gray-500 dark:text-gray-400 mt-2">MSMS öğrenci panelindeki özellikleri en verimli şekilde kullanmanız için hazırladığımız güncel rehber.</p>
             </div>
 
             {/* Ana Sayfa */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white dark:bg-[#18212a] rounded-2xl p-6 border border-gray-200 dark:border-[#202932] shadow-sm">
                 <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                    <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
                         <span className="material-symbols-outlined text-2xl">home</span>
                     </div>
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Ana Sayfa</h2>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Ana sayfa, panelinize giriş yaptığınızda sizi karşılayan ekrandır. Burada:
+                            Panelinizin kontrol merkezi. Buradan:
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1">
-                            <li>Günlük özetinizi görebilirsiniz.</li>
-                            <li>Yaklaşan görevlerinizi ve sınavlarınızı takip edebilirsiniz.</li>
-                            <li>Genel ilerleme durumunuzu grafiklerle inceleyebilirsiniz.</li>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1 feature-list">
+                            <li><strong>Özet İstatistikler:</strong> TYT ve AYT genel net ortalamalarınızı anlık takip edin.</li>
+                            <li><strong>Hava Durumu:</strong> Bulunduğunuz konuma göre güncel hava durumu bilgisini görün.</li>
+                            <li><strong>Bildirimler:</strong> Ok okunmamış bildirimlerinizi sağ üst köşeden kontrol edin.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             {/* Ders Programı */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white dark:bg-[#18212a] rounded-2xl p-6 border border-gray-200 dark:border-[#202932] shadow-sm">
                 <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                    <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
                         <span className="material-symbols-outlined text-2xl">calendar_month</span>
                     </div>
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Ders Programı</h2>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Haftalık çalışma planınızı buradan yönetebilirsiniz.
+                            Haftalık çalışma rutininizi planlayın ve takip edin.
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1">
-                            <li><strong>Görev Ekle:</strong> Yeni bir çalışma veya ders eklemek için "Görev Ekle" butonunu kullanın.</li>
-                            <li><strong>Sürükle & Bırak:</strong> Görevlerinizi günler arasında sürükleyerek planınızı kolayca güncelleyebilirsiniz.</li>
-                            <li><strong>Tamamlandı İşaretleme:</strong> Yaptığınız çalışmaları kutucuğa tıklayarak tamamlandı olarak işaretleyin.</li>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1 feature-list">
+                            <li>Mentorunuz tarafından atanan programı görüntüleyin.</li>
+                            <li>Tamamladığınız çalışmaları işaretleyerek ilerlemenizi kaydedin.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            {/* Sınavlarım */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            {/* Sınavlar */}
+            <div className="bg-white dark:bg-[#18212a] rounded-2xl p-6 border border-gray-200 dark:border-[#202932] shadow-sm">
                 <div className="flex items-start gap-4">
                     <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
                         <span className="material-symbols-outlined text-2xl">quiz</span>
@@ -57,70 +56,69 @@ const HelpPage = () => {
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Sınavlarım</h2>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Deneme sınavlarınızı ve sonuçlarınızı buradan takip edin.
+                            Deneme sınavı performansınızı analiz edin.
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1">
-                            <li>Girdiğiniz TYT ve AYT denemelerini sisteme kaydedin.</li>
-                            <li>Netlerinizi ve puanlarınızı detaylı olarak görün.</li>
-                            <li>Gelişim grafikleri ile performansınızı analiz edin.</li>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1 feature-list">
+                            <li>Girdiğiniz tüm TYT ve AYT deneme sonuçlarını listeyin.</li>
+                            <li>Her sınavın detayına giderek ders bazlı doğru/yanlış ve netlerinizi inceleyin.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            {/* Analizler (Disiplin) */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            {/* Analizler */}
+            <div className="bg-white dark:bg-[#18212a] rounded-2xl p-6 border border-gray-200 dark:border-[#202932] shadow-sm">
                 <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                    <div className="p-3 rounded-xl bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400">
                         <span className="material-symbols-outlined text-2xl">monitoring</span>
                     </div>
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Disiplin (Analizler)</h2>
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Analizler</h2>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Çalışma disiplininizi ve sürekliliğinizi ölçen bölümdür.
+                            Gelişiminizi görsel grafiklerle izleyin.
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1">
-                            <li>Haftalık çalışma saatlerinizi görüntüleyin.</li>
-                            <li>Ders bazlı çalışma dağılımınızı inceleyin.</li>
-                            <li>Hedeflerinize ne kadar yaklaştığınızı görün.</li>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1 feature-list">
+                            <li><strong>Çalışma Isı Haritası:</strong> Hangi günlerde ne kadar yoğun çalıştığınızı renkli ısı haritasında görün.</li>
+                            <li><strong>Seri Takibi:</strong> Aralıksız çalışma günlerinizi takip ederek "streak" yapın.</li>
+                            <li><strong>Ders Dağılımı:</strong> Hangi derse ne kadar ağırlık verdiğinizi pasta grafikleriyle inceleyin.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            {/* Yapay Zeka */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            {/* Yapay Zeka - Kitap Analizi */}
+            <div className="bg-white dark:bg-[#18212a] rounded-2xl p-6 border border-gray-200 dark:border-[#202932] shadow-sm">
                 <div className="flex items-start gap-4">
                     <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
                         <span className="material-symbols-outlined text-2xl">auto_awesome</span>
                     </div>
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yapay Zeka Önerileri</h2>
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yapay Zeka: Kitap Analizi</h2>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Size özel akıllı öneriler sunan asistanınız.
+                            Okumayı düşündüğünüz kitaplar için yapay zeka destekli öngörüler.
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1">
-                            <li><strong>Kitap Analizi:</strong> Okumayı düşündüğünüz bir kitabın size uygunluğunu yapay zekaya sorabilirsiniz.</li>
-                            <li>Çalışma programınız için kişiselleştirilmiş tavsiyeler alın.</li>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1 feature-list">
+                            <li><strong>Satış Tahmini:</strong> Kitabın özelliklerine göre tahmini satış adedini öğrenin.</li>
+                            <li><strong>Sınav Uygunluğu:</strong> Kitabın popülerliğine göre sınavlarda soru kaynağı olma ihtimalini değerlendirin.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            {/* Toplantılar & Mesajlar */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            {/* İletişim */}
+            <div className="bg-white dark:bg-[#18212a] rounded-2xl p-6 border border-gray-200 dark:border-[#202932] shadow-sm">
                 <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400">
-                        <span className="material-symbols-outlined text-2xl">groups</span>
+                    <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400">
+                        <span className="material-symbols-outlined text-2xl">forum</span>
                     </div>
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">İletişim (Toplantılar & Mesajlar)</h2>
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">İletişim</h2>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Mentorunuzla iletişimde kalmanızı sağlayan araçlar.
+                            Mentorlarınızla her zaman bağlantıda kalın.
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1">
-                            <li><strong>Toplantılar:</strong> Planlanan görüşmelerinizi görün ve katılın.</li>
-                            <li><strong>Mesajlar:</strong> Mentorunuza hızlıca soru sorun veya durum bildirimi yapın.</li>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-1 feature-list">
+                            <li><strong>Mesajlar:</strong> Tüm mentorlarınızı listeleyin ve WhatsApp üzerinden hızlıca iletişime geçin.</li>
+                            <li><strong>Toplantılar:</strong> Planlanan online veya yüz yüze görüşmelerinizi takip edin.</li>
                         </ul>
                     </div>
                 </div>

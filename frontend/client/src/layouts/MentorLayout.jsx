@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { getAuth, clearAuth } from '../utils/authUtils';
+import { getWeather, getUserLocation } from '../services/weatherService';
+import { useTheme } from '../context/ThemeContext';
 
 const MentorLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -9,13 +11,37 @@ const MentorLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [user, setUser] = useState(null);
+    const [weather, setWeather] = useState(null);
+    const { theme, toggleTheme } = useTheme();
 
     React.useEffect(() => {
         const auth = getAuth();
         if (auth) {
             setUser(auth.user);
         }
+        fetchWeather();
     }, []);
+
+    const fetchWeather = async () => {
+        try {
+            // Default to Istanbul coordinates
+            let lat = 41.0082;
+            let lon = 28.9784;
+
+            try {
+                const position = await getUserLocation();
+                lat = position.lat;
+                lon = position.lon;
+            } catch (locError) {
+                console.warn('Location access denied or unavailable, using default (Istanbul).');
+            }
+
+            const weatherData = await getWeather(lat, lon);
+            setWeather(weatherData);
+        } catch (error) {
+            console.error('Error fetching weather:', error);
+        }
+    };
 
     // Check if current path is under Student Management or Analytics to keep menu open
     React.useEffect(() => {
@@ -209,9 +235,28 @@ const MentorLayout = () => {
                         </button>
 
                         <div className="flex flex-1 justify-end items-center gap-4">
-                            <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-transparent hover:bg-[#f0f2f4] dark:hover:bg-[#202932] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
-                                <span className="material-symbols-outlined">dark_mode</span>
+                            <button
+                                onClick={toggleTheme}
+                                className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-transparent hover:bg-[#f0f2f4] dark:hover:bg-[#202932] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0"
+                            >
+                                <span className="material-symbols-outlined">
+                                    {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                                </span>
                             </button>
+
+                            {/* Weather Widget (Compact) */}
+                            {weather && (
+                                <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#f0f2f4] dark:bg-[#202932]">
+                                    <div className="text-blue-600 dark:text-blue-400">
+                                        <span className={`material-symbols-outlined text-xl ${weather.color}`}>{weather.icon}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-[#111418] dark:text-white text-sm font-bold">{weather.temperature}°C</p>
+                                        <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                        <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase">{weather.label}</p>
+                                    </div>
+                                </div>
+                            )}
 
                             <div
                                 className="flex items-center gap-3 cursor-pointer p-1 rounded-lg hover:bg-[#f0f2f4] dark:hover:bg-[#202932]"

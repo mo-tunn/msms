@@ -1,51 +1,145 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getDailyActivities, getTaskAnalysis } from '../../services/api';
 
-const AnalysisPage = ({ embedded = false }) => {
+const AnalysisPage = ({ embedded = false, studentId = null }) => {
     const [timeFilter, setTimeFilter] = useState('1 Hafta');
+    const [contributionData, setContributionData] = useState([]);
+    const [taskData, setTaskData] = useState({ total: 0, completed: 0, missed: 0, rate: 0, chart: [] });
+    const [loading, setLoading] = useState(true);
 
-    // Mock data for "Zinciri Kırma" (Contribution Graph) - Last 365 days
-    const generateContributionData = () => {
-        const data = [];
-        const today = new Date();
-        for (let i = 0; i < 365; i++) {
-            const date = new Date(today);
-            date.setDate(date.getDate() - i);
-            // Random intensity: 0 (empty), 1 (low), 2 (medium), 3 (high)
-            const intensity = Math.random() > 0.7 ? Math.floor(Math.random() * 4) : 0;
-            data.push({ date, intensity });
+    useEffect(() => {
+        fetchDailyActivities();
+    }, [studentId]);
+
+    useEffect(() => {
+        fetchTaskAnalysis();
+    }, [timeFilter, studentId]);
+
+    const fetchDailyActivities = async () => {
+        try {
+            const data = await getDailyActivities(studentId);
+            const activityMap = {};
+            data.forEach(item => {
+                const dateStr = new Date(item.activity_date).toDateString();
+                activityMap[dateStr] = parseInt(item.completed_count || 0);
+            });
+
+            // Calculate Start Date for the Grid (Must be a Monday)
+            // We want 53 weeks (~1 year). The grid has 53 columns.
+            // We want the last column to include Today.
+            // So we find the Monday of the current week.
+            const today = new Date();
+            const currentDay = today.getDay(); // 0=Sun, 1=Mon
+            const daysSinceMonday = (currentDay + 6) % 7; // Convert to Mon=0 start
+            const thisWeekMonday = new Date(today);
+            thisWeekMonday.setDate(today.getDate() - daysSinceMonday);
+
+            // Start date = 52 weeks before this week's Monday
+            const gridStartDate = new Date(thisWeekMonday);
+            gridStartDate.setDate(gridStartDate.getDate() - (52 * 7));
+
+            const heatmapData = [];
+            // Generate exactly 53 * 7 = 371 days of data
+            for (let i = 0; i < 371; i++) {
+                const date = new Date(gridStartDate);
+                date.setDate(date.getDate() + i);
+                const dateStr = date.toDateString();
+
+                // Don't show future days
+                if (date > today) {
+                    heatmapData.push({ date, intensity: 0, count: 0, isFuture: true });
+                    continue;
+                }
+
+                const count = activityMap[dateStr] || 0;
+                let intensity = 0;
+                if (count > 0) intensity = 1;
+                if (count >= 3) intensity = 2;
+                if (count >= 5) intensity = 3;
+
+                heatmapData.push({ date, intensity, count, isFuture: false });
+            }
+            // No reverse needed, we built it chronologically (Mon -> Sun, Old -> New)
+            setContributionData(heatmapData);
+        } catch (error) {
+            console.error('Failed to fetch daily activities:', error);
         }
-        return data.reverse();
     };
 
-    const contributionData = generateContributionData();
-
-    // Mock data for "Ders Programı Görevleri" based on filter
-    const getTaskData = (filter) => {
-        switch (filter) {
-            case '1 Hafta': return { total: 45, completed: 35, missed: 10, rate: 78, chart: [6, 7, 5, 8, 4, 3, 2] }; // Daily
-            case '1 Ay': return { total: 180, completed: 140, missed: 40, rate: 77, chart: [30, 45, 35, 30] }; // Weekly
-            case '3 Ay': return { total: 540, completed: 420, missed: 120, rate: 77, chart: [130, 140, 150] }; // Monthly
-            case '6 Ay': return { total: 1080, completed: 850, missed: 230, rate: 78, chart: [140, 130, 150, 140, 130, 160] }; // Monthly
-            case '1 Yıl': return { total: 2160, completed: 1700, missed: 460, rate: 79, chart: [140, 150, 130, 160, 140, 150, 130, 140, 150, 160, 140, 150] }; // Monthly
-            default: return { total: 45, completed: 35, missed: 10, rate: 78, chart: [6, 7, 5, 8, 4, 3, 2] };
+    const fetchTaskAnalysis = async () => {
+        try {
+            const data = await getTaskAnalysis(timeFilter, studentId);
+            setTaskData({
+                total: data.total,
+                completed: data.completed,
+                missed: data.missed,
+                rate: data.rate,
+                chart: data.chart || [],
+                labels: data.labels || []
+            });
+        } catch (error) {
+            console.error('Failed to fetch task analysis:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const taskData = getTaskData(timeFilter);
+    // Calculate streaks
+    const calculateStreaks = () => {
+        if (contributionData.length === 0) return { currentStreak: 0, maxStreak: 0 };
 
-    // Helper to get labels for the chart
-    const getChartLabels = (filter) => {
-        switch (filter) {
-            case '1 Hafta': return ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
-            case '1 Ay': return ['1. Hf', '2. Hf', '3. Hf', '4. Hf'];
-            case '3 Ay': return ['Ay 1', 'Ay 2', 'Ay 3'];
-            case '6 Ay': return ['Ay 1', 'Ay 2', 'Ay 3', 'Ay 4', 'Ay 5', 'Ay 6'];
-            case '1 Yıl': return ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-            default: return [];
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let tempStreak = 0;
+
+        // Iterate strictly by date sequence (oldest to newest)
+        for (let i = 0; i < contributionData.length; i++) {
+            if (contributionData[i].count > 0) {
+                tempStreak++;
+            } else {
+                if (tempStreak > maxStreak) maxStreak = tempStreak;
+                tempStreak = 0;
+            }
         }
+        if (tempStreak > maxStreak) maxStreak = tempStreak;
+
+
+        // Smart Current Streak Logic
+        // Find index of TODAY (last non-future entry)
+        let todayIndex = -1;
+        for (let i = contributionData.length - 1; i >= 0; i--) {
+            if (!contributionData[i].isFuture) {
+                todayIndex = i;
+                break;
+            }
+        }
+
+        if (todayIndex === -1) return { currentStreak: 0, maxStreak }; // Should not happen
+
+        const todayActive = contributionData[todayIndex].count > 0;
+        const yesterdayActive = todayIndex > 0 && contributionData[todayIndex - 1].count > 0;
+
+        let startIndex = -1;
+        if (todayActive) {
+            startIndex = todayIndex;
+        } else if (yesterdayActive) {
+            startIndex = todayIndex - 1;
+        }
+
+        if (startIndex !== -1) {
+            for (let i = startIndex; i >= 0; i--) {
+                if (contributionData[i].count > 0) {
+                    currentStreak++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return { currentStreak, maxStreak };
     };
 
-    const chartLabels = getChartLabels(timeFilter);
+    const { currentStreak, maxStreak } = calculateStreaks();
 
     return (
         <>
@@ -66,12 +160,12 @@ const AnalysisPage = ({ embedded = false }) => {
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="flex flex-col items-end">
-                                <span className="text-2xl font-black text-primary">28 Gün</span>
+                                <span className="text-2xl font-black text-primary">{currentStreak} Gün</span>
                                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Mevcut Seri</span>
                             </div>
                             <div className="w-px h-8 bg-gray-200 dark:bg-gray-700"></div>
                             <div className="flex flex-col items-end">
-                                <span className="text-2xl font-black text-green-500">142 Gün</span>
+                                <span className="text-2xl font-black text-green-500">{maxStreak} Gün</span>
                                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">En Uzun Seri</span>
                             </div>
                         </div>
@@ -175,32 +269,43 @@ const AnalysisPage = ({ embedded = false }) => {
                             </div>
                         </div>
 
-                        {/* Chart */}
-                        <div className="lg:col-span-2 flex flex-col justify-end h-64">
-                            <div className="flex items-end justify-between gap-2 h-full px-2">
-                                {taskData.chart.map((value, index) => {
-                                    const maxVal = Math.max(...taskData.chart);
-                                    const height = (value / maxVal) * 100;
-                                    return (
-                                        <div key={index} className="flex flex-col items-center flex-1 h-full justify-end gap-2 group">
-                                            <div className="w-full relative flex items-end justify-center h-full">
-                                                <div
-                                                    className="w-full max-w-[40px] bg-primary opacity-80 hover:opacity-100 rounded-t-lg transition-all duration-300 relative group-hover:scale-y-105 origin-bottom"
-                                                    style={{ height: `${height}%` }}
-                                                >
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent rounded-t-lg"></div>
-                                                </div>
-                                                {/* Tooltip */}
-                                                <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs py-1 px-2 rounded pointer-events-none whitespace-nowrap z-10 mb-2">
-                                                    {value} Görev
-                                                </div>
-                                            </div>
-                                            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium truncate w-full text-center">
-                                                {chartLabels[index]}
-                                            </span>
+                        {/* Pie Chart */}
+                        <div className="lg:col-span-2 flex flex-col justify-between h-80 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-100 dark:border-gray-800">
+                            <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">Görev Dağılımı</h3>
+
+                            <div className="flex items-center justify-center h-full gap-12">
+                                {/* Pie Chart Visualization */}
+                                <div className="relative size-48 rounded-full shadow-lg"
+                                    style={{
+                                        background: `conic-gradient(#3b82f6 0% ${taskData.rate}%, #ef4444 ${taskData.rate}% 100%)`
+                                    }}
+                                >
+                                    {/* Inner Circle for Donut Effect (Optional, simplifies to Pie if removed, but Donut looks more modern) */}
+                                    <div className="absolute inset-4 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                        <div className="text-center">
+                                            <span className="text-3xl font-black text-gray-900 dark:text-white">{taskData.rate}%</span>
+                                            <p className="text-xs text-gray-500 font-medium">Başarı</p>
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                </div>
+
+                                {/* Legend */}
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="size-4 rounded-full bg-blue-500 shadow-sm"></div>
+                                        <div>
+                                            <p className="text-sm font-bold text-gray-900 dark:text-white">Tamamlanan</p>
+                                            <p className="text-xs text-gray-500">{taskData.completed} Görev</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="size-4 rounded-full bg-red-500 shadow-sm"></div>
+                                        <div>
+                                            <p className="text-sm font-bold text-gray-900 dark:text-white">Tamamlanmayan</p>
+                                            <p className="text-xs text-gray-500">{taskData.total - taskData.completed} Görev</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -136,30 +136,30 @@ const BookAnalysisPage = () => {
             </div>
 
             {/* Explanation - Moved to Top */}
-            <div className="bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                <h4 className="font-bold text-[#2c3e50] mb-2 flex items-center gap-2 text-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#5a4fcf]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-100 dark:border-blue-900/30 shadow-sm">
+                <h4 className="font-bold text-[#2c3e50] dark:text-white mb-2 flex items-center gap-2 text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#5a4fcf] dark:text-[#7c73e6]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Satış Sayısı ve Sınav İlişkisi
                 </h4>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                     ÖSYM ve diğer sınav hazırlama komiteleri, paragraf sorularını seçerken genellikle toplumda karşılık bulmuş, çok okunan ve edebi değeri yüksek eserlerden alıntılar yapmayı tercih ederler.
-                    Satış sayısının yüksek olması, kitabın popülerliğini ve dil kullanımının güncel kabul gördüğünü işaret eder. Bu nedenle, <strong>çok satan kitapların sınavlarda soru kaynağı olarak kullanılma ihtimali istatistiksel olarak daha yüksektir.</strong>
+                    Satış sayısının yüksek olması, kitabın popülerliğini ve dil kullanımının güncel kabul gördüğünü işaret eder. Bu nedenle, <strong className="text-gray-900 dark:text-white">çok satan kitapların sınavlarda soru kaynağı olarak kullanılma ihtimali istatistiksel olarak daha yüksektir.</strong>
                 </p>
             </div>
 
             {/* Categorical Features */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="text-[#5a4fcf] font-bold text-lg mb-4">Kategorik Özellikler</h2>
+            <div className="bg-white dark:bg-[#18212a] p-6 rounded-lg shadow-sm border border-gray-200 dark:border-[#202932]">
+                <h2 className="text-[#5a4fcf] dark:text-[#7c73e6] font-bold text-lg mb-4">Kategorik Özellikler</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Yayınevi</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Yayınevi</label>
                         <select
                             name="Yayınevi"
                             value={formData["Yayınevi"] || ""}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5a4fcf] focus:border-transparent outline-none bg-white"
+                            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#5a4fcf] focus:border-transparent outline-none bg-white dark:bg-[#1f2937] text-gray-900 dark:text-white"
                         >
                             {publishers.map(p => (
                                 <option key={p} value={p}>{p}</option>
@@ -167,12 +167,12 @@ const BookAnalysisPage = () => {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Ana Kategori</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ana Kategori</label>
                         <select
                             name="Ana_Kategori"
                             value={formData["Ana_Kategori"] || ""}
                             onChange={handleInputChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5a4fcf] focus:border-transparent outline-none bg-white"
+                            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#5a4fcf] focus:border-transparent outline-none bg-white dark:bg-[#1f2937] text-gray-900 dark:text-white"
                         >
                             {categories.map(c => (
                                 <option key={c} value={c}>{c}</option>
@@ -183,12 +183,12 @@ const BookAnalysisPage = () => {
             </div>
 
             {/* Numerical Features */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="text-[#5a4fcf] font-bold text-lg mb-4">Sayısal Özellikler</h2>
+            <div className="bg-white dark:bg-[#18212a] p-6 rounded-lg shadow-sm border border-gray-200 dark:border-[#202932]">
+                <h2 className="text-[#5a4fcf] dark:text-[#7c73e6] font-bold text-lg mb-4">Sayısal Özellikler</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {numericalFeatures.map(feature => (
                         <div key={feature}>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {feature.replace(/_/g, " ")}
                             </label>
                             <input
@@ -196,7 +196,7 @@ const BookAnalysisPage = () => {
                                 name={feature}
                                 value={formData[feature] || ""}
                                 onChange={handleInputChange}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5a4fcf] focus:border-transparent outline-none"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#5a4fcf] focus:border-transparent outline-none bg-white dark:bg-[#1f2937] text-gray-900 dark:text-white"
                                 placeholder="0"
                             />
                         </div>
@@ -244,23 +244,23 @@ const BookAnalysisPage = () => {
             {/* Prediction Result */}
             {prediction !== null && (
                 <div className="space-y-6 animate-fade-in">
-                    <div className="bg-[#f0fdf4] border border-[#dcfce7] p-8 rounded-lg text-center shadow-md">
-                        <h3 className="text-xl font-bold text-[#166534] mb-2">Tahmin Sonucu</h3>
-                        <div className="text-6xl font-extrabold text-[#4338ca] mb-2 tracking-tight">
+                    <div className="bg-[#f0fdf4] dark:bg-green-900/20 border border-[#dcfce7] dark:border-green-900/30 p-8 rounded-lg text-center shadow-md">
+                        <h3 className="text-xl font-bold text-[#166534] dark:text-green-400 mb-2">Tahmin Sonucu</h3>
+                        <div className="text-6xl font-extrabold text-[#4338ca] dark:text-[#7c73e6] mb-2 tracking-tight">
                             {prediction}
                         </div>
-                        <p className="text-gray-600 font-medium">adet satılacağı tahmin ediliyor.</p>
+                        <p className="text-gray-600 dark:text-gray-300 font-medium">adet satılacağı tahmin ediliyor.</p>
                     </div>
 
                     {/* Feedback Message */}
-                    <div className={`p-8 rounded-xl border-2 shadow-lg transition-all duration-500 transform hover:scale-[1.01] ${prediction < 200 ? 'bg-yellow-50 border-yellow-200 text-yellow-900' :
-                            prediction < 450 ? 'bg-blue-50 border-blue-200 text-blue-900' :
-                                'bg-purple-50 border-purple-200 text-purple-900'
+                    <div className={`p-8 rounded-xl border-2 shadow-lg transition-all duration-500 transform hover:scale-[1.01] ${prediction < 200 ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-900/30 text-yellow-900 dark:text-yellow-100' :
+                        prediction < 450 ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900/30 text-blue-900 dark:text-blue-100' :
+                            'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-900/30 text-purple-900 dark:text-purple-100'
                         }`}>
                         <div className="flex items-start gap-4">
                             <div className={`p-3 rounded-full ${prediction < 200 ? 'bg-yellow-100' :
-                                    prediction < 450 ? 'bg-blue-100' :
-                                        'bg-purple-100'
+                                prediction < 450 ? 'bg-blue-100' :
+                                    'bg-purple-100'
                                 }`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />

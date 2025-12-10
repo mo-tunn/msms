@@ -90,6 +90,17 @@ class UserRepository {
         const result = await pool.query(query, [mentorId]);
         return result.rows;
     }
+
+    async findAllMentors() {
+        const query = `
+            SELECT u.id, u.first_name, u.last_name, u.phone, u.avatar_url, m.branch
+            FROM users u
+            JOIN mentors m ON u.id = m.user_id
+            WHERE u.role_id = 2
+        `;
+        const result = await pool.query(query);
+        return result.rows;
+    }
 }
 
 module.exports = new UserRepository();

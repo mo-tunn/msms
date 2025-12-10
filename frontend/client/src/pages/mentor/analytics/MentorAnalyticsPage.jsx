@@ -1,19 +1,13 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ExamsPage from '../../student/ExamsPage';
 import ExamDetailPage from '../../student/ExamDetailPage';
 import AnalysisPage from '../../student/AnalysisPage';
+import { getMentorStudentsAnalytics } from '../../../services/api';
 
 const MentorAnalyticsPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const [filterExamTrend, setFilterExamTrend] = useState('all');
-    const [filterTasksCompleted, setFilterTasksCompleted] = useState({ min: '', max: '' });
-    const [filterTasksIncomplete, setFilterTasksIncomplete] = useState({ min: '', max: '' });
-    const [filterStreak, setFilterStreak] = useState({ min: '', max: '' });
-    const [filterSuccessScore, setFilterSuccessScore] = useState({ min: '', max: '' });
-
+    const location = useLocation();
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
@@ -22,59 +16,50 @@ const MentorAnalyticsPage = () => {
     const [activeTab, setActiveTab] = useState('exams');
     const [selectedExamId, setSelectedExamId] = useState(null);
 
-    // Mock Data
-    const students = [
-        { id: 1, name: 'Ali Yılmaz', avatar: 'AY', tasksCompleted: 45, tasksIncomplete: 2, streak: 12, examTrend: 'increasing', lastExamScore: 85 },
-        { id: 2, name: 'Ayşe Demir', avatar: 'AD', tasksCompleted: 38, tasksIncomplete: 5, streak: 5, examTrend: 'stable', lastExamScore: 72 },
-        { id: 3, name: 'Mehmet Kaya', avatar: 'MK', tasksCompleted: 50, tasksIncomplete: 0, streak: 20, examTrend: 'increasing', lastExamScore: 90 },
-        { id: 4, name: 'Fatma Çelik', avatar: 'FÇ', tasksCompleted: 25, tasksIncomplete: 10, streak: 0, examTrend: 'decreasing', lastExamScore: 60 },
-        { id: 5, name: 'Ahmet Şahin', avatar: 'AŞ', tasksCompleted: 42, tasksIncomplete: 3, streak: 8, examTrend: 'stable', lastExamScore: 78 },
-        { id: 6, name: 'Zeynep Koç', avatar: 'ZK', tasksCompleted: 30, tasksIncomplete: 8, streak: 2, examTrend: 'decreasing', lastExamScore: 65 },
-        { id: 7, name: 'Mustafa Öztürk', avatar: 'MÖ', tasksCompleted: 48, tasksIncomplete: 1, streak: 15, examTrend: 'increasing', lastExamScore: 88 },
-        { id: 8, name: 'Elif Arslan', avatar: 'EA', tasksCompleted: 35, tasksIncomplete: 6, streak: 4, examTrend: 'stable', lastExamScore: 70 },
-    ];
+    const [students, setStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const calculateSuccessMetric = (student) => {
-        // Simple weighted score calculation
-        const taskScore = (student.tasksCompleted / (student.tasksCompleted + student.tasksIncomplete)) * 40;
-        const streakScore = Math.min(student.streak, 20) * 1.5; // Max 30 points from streak
-        const examScore = student.lastExamScore * 0.3; // Max 30 points from exams
-        return Math.round(taskScore + streakScore + examScore);
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const data = await getMentorStudentsAnalytics();
+                setStudents(data);
+            } catch (error) {
+                console.error('Failed to fetch mentor students analytics:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStudents();
+    }, []);
+
+    useEffect(() => {
+        if (location.state?.selectedStudentId && students.length > 0) {
+            const student = students.find(s => s.id === location.state.selectedStudentId);
+            if (student) {
+                handleOpenModal(student);
+                // Clear state so it doesn't reopen on refresh/navigate back
+                window.history.replaceState({}, document.title);
+            }
+        }
+    }, [location.state, students]);
+
+    const getSuccessStatusStyles = (label) => {
+        switch (label) {
+            case 'Çok Yükselişte': return { color: 'text-purple-600', bg: 'bg-purple-100', text: 'text-purple-700' };
+            case 'Yükselişte': return { color: 'text-green-500', bg: 'bg-green-100', text: 'text-green-700' };
+            case 'Dengeli': return { color: 'text-yellow-500', bg: 'bg-yellow-100', text: 'text-yellow-700' };
+            case 'Riskli': return { color: 'text-orange-500', bg: 'bg-orange-100', text: 'text-orange-700' };
+            default: return { color: 'text-red-500', bg: 'bg-red-100', text: 'text-red-700' }; // Çok Riskli or unknown
+        }
     };
 
-    const getSuccessStatus = (score) => {
-        if (score >= 85) return { label: 'Çok Yükselişte', color: 'text-purple-600', bg: 'bg-purple-100', text: 'text-purple-700' };
-        if (score >= 70) return { label: 'Yükselişte', color: 'text-green-500', bg: 'bg-green-100', text: 'text-green-700' };
-        if (score >= 50) return { label: 'Dengeli', color: 'text-yellow-500', bg: 'bg-yellow-100', text: 'text-yellow-700' };
-        if (score >= 30) return { label: 'Riskli', color: 'text-orange-500', bg: 'bg-orange-100', text: 'text-orange-700' };
-        return { label: 'Çok Riskli', color: 'text-red-500', bg: 'bg-red-100', text: 'text-red-700' };
-    };
+    // Pagination Logic
+    const totalPages = Math.ceil(students.length / itemsPerPage);
+    const currentStudents = students.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    // Filtered Students
-    const filteredStudents = useMemo(() => {
-        return students.filter(student => {
-            const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesTrend = filterExamTrend === 'all' || student.examTrend === filterExamTrend;
 
-            const score = calculateSuccessMetric(student);
-            const matchesSuccessScore =
-                (filterSuccessScore.min === '' || score >= parseInt(filterSuccessScore.min)) &&
-                (filterSuccessScore.max === '' || score <= parseInt(filterSuccessScore.max));
-
-            const matchesTasksCompleted =
-                (filterTasksCompleted.min === '' || student.tasksCompleted >= parseInt(filterTasksCompleted.min)) &&
-                (filterTasksCompleted.max === '' || student.tasksCompleted <= parseInt(filterTasksCompleted.max));
-
-            const matchesStreak =
-                (filterStreak.min === '' || student.streak >= parseInt(filterStreak.min)) &&
-                (filterStreak.max === '' || student.streak <= parseInt(filterStreak.max));
-
-            return matchesSearch && matchesTrend && matchesSuccessScore && matchesTasksCompleted && matchesStreak;
-        });
-    }, [students, searchQuery, filterExamTrend, filterSuccessScore, filterTasksCompleted, filterStreak]);
-
-    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
-    const currentStudents = filteredStudents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const handleExamClick = (examId) => {
         setSelectedExamId(examId);
@@ -92,18 +77,18 @@ const MentorAnalyticsPage = () => {
         let totalStreak = 0;
 
         students.forEach(student => {
-            const score = calculateSuccessMetric(student);
-            const status = getSuccessStatus(score);
-            if (statusCounts[status.label] !== undefined) statusCounts[status.label]++;
+            const label = student.riskStatus || 'Çok Riskli';
+            if (statusCounts[label] !== undefined) statusCounts[label]++;
 
             totalTasksCompleted += student.tasksCompleted;
             totalTasksIncomplete += student.tasksIncomplete;
             totalStreak += student.streak;
         });
 
-        const avgTasksCompleted = Math.round(totalTasksCompleted / students.length);
-        const avgTasksIncomplete = Math.round(totalTasksIncomplete / students.length);
-        const avgStreak = Math.round(totalStreak / students.length);
+        const count = students.length || 1;
+        const avgTasksCompleted = Math.round(totalTasksCompleted / count);
+        const avgTasksIncomplete = Math.round(totalTasksIncomplete / count);
+        const avgStreak = Math.round(totalStreak / count);
 
         return { statusCounts, avgTasksCompleted, avgTasksIncomplete, avgStreak };
     }, [students]);
@@ -150,7 +135,7 @@ const MentorAnalyticsPage = () => {
                     <div>
                         <p className="text-sm text-[#617589] dark:text-gray-400 font-medium">Ortalama Başarı</p>
                         <p className="text-2xl font-bold text-[#111418] dark:text-white mt-1">
-                            {Math.round(students.reduce((acc, student) => acc + calculateSuccessMetric(student), 0) / students.length)} Puan
+                            {students.length > 0 ? Math.round(students.reduce((acc, student) => acc + (student.studentScore || 0), 0) / students.length) : 0} Puan
                         </p>
                     </div>
                 </div>
@@ -237,103 +222,14 @@ const MentorAnalyticsPage = () => {
                 </div>
             </div>
 
-            {/* Filter Section */}
-            <div className="bg-white dark:bg-[#18212a] p-6 rounded-2xl border border-[#e0e6ed] dark:border-[#202932] shadow-sm space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                    <span className="material-symbols-outlined text-primary">filter_list</span>
-                    <h3 className="text-lg font-bold text-[#111418] dark:text-white">Filtreleme Seçenekleri</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Search */}
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="material-symbols-outlined text-gray-500">search</span>
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Öğrenci Ara..."
-                            className="pl-10 pr-4 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 w-full"
-                            value={searchQuery}
-                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                        />
-                    </div>
 
-                    {/* Exam Trend Filter */}
-                    <div>
-                        <select
-                            className="w-full px-4 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            value={filterExamTrend}
-                            onChange={(e) => { setFilterExamTrend(e.target.value); setCurrentPage(1); }}
-                        >
-                            <option value="all">Tüm Trendler</option>
-                            <option value="increasing">Yükselişte</option>
-                            <option value="stable">Dengeli</option>
-                            <option value="decreasing">Düşüşte</option>
-                        </select>
-                    </div>
-
-                    {/* Success Score Range */}
-                    <div className="flex gap-2">
-                        <input
-                            type="number"
-                            placeholder="Min Puan"
-                            className="w-1/2 px-3 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={filterSuccessScore.min}
-                            onChange={(e) => { setFilterSuccessScore({ ...filterSuccessScore, min: e.target.value }); setCurrentPage(1); }}
-                        />
-                        <input
-                            type="number"
-                            placeholder="Max Puan"
-                            className="w-1/2 px-3 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={filterSuccessScore.max}
-                            onChange={(e) => { setFilterSuccessScore({ ...filterSuccessScore, max: e.target.value }); setCurrentPage(1); }}
-                        />
-                    </div>
-
-                    {/* Tasks Completed Range */}
-                    <div className="flex gap-2">
-                        <input
-                            type="number"
-                            placeholder="Min Tamamlanan"
-                            className="w-1/2 px-3 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={filterTasksCompleted.min}
-                            onChange={(e) => { setFilterTasksCompleted({ ...filterTasksCompleted, min: e.target.value }); setCurrentPage(1); }}
-                        />
-                        <input
-                            type="number"
-                            placeholder="Max Tamamlanan"
-                            className="w-1/2 px-3 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={filterTasksCompleted.max}
-                            onChange={(e) => { setFilterTasksCompleted({ ...filterTasksCompleted, max: e.target.value }); setCurrentPage(1); }}
-                        />
-                    </div>
-
-                    {/* Streak Range */}
-                    <div className="flex gap-2">
-                        <input
-                            type="number"
-                            placeholder="Min Zincir"
-                            className="w-1/2 px-3 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={filterStreak.min}
-                            onChange={(e) => { setFilterStreak({ ...filterStreak, min: e.target.value }); setCurrentPage(1); }}
-                        />
-                        <input
-                            type="number"
-                            placeholder="Max Zincir"
-                            className="w-1/2 px-3 py-2 rounded-xl border border-[#e0e6ed] dark:border-[#202932] bg-[#f0f2f4] dark:bg-[#202932] text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={filterStreak.max}
-                            onChange={(e) => { setFilterStreak({ ...filterStreak, max: e.target.value }); setCurrentPage(1); }}
-                        />
-                    </div>
-                </div>
-            </div>
 
             {/* Student List */}
             <div className="grid grid-cols-1 gap-4">
                 {currentStudents.length > 0 ? (
                     currentStudents.map((student) => {
-                        const score = calculateSuccessMetric(student);
-                        const status = getSuccessStatus(score);
+                        const status = getSuccessStatusStyles(student.riskStatus);
+                        // Backend provides: studentScore, riskStatus, examTrend, etc.
 
                         return (
                             <div key={student.id} className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 rounded-2xl border border-[#e0e6ed] dark:border-[#202932] bg-white dark:bg-[#18212a] shadow-sm hover:shadow-md transition-shadow">
@@ -352,7 +248,7 @@ const MentorAnalyticsPage = () => {
                                 <div className="flex items-center justify-around w-full md:w-2/4 gap-4">
                                     <div className="text-center">
                                         <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Başarı Puanı</p>
-                                        <p className="text-indigo-600 dark:text-indigo-400 text-lg font-bold">{score}</p>
+                                        <p className="text-indigo-600 dark:text-indigo-400 text-lg font-bold">{student.studentScore || 0}</p>
                                     </div>
                                     <div className="text-center">
                                         <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Tamamlanan</p>
@@ -363,7 +259,7 @@ const MentorAnalyticsPage = () => {
                                         <p className="text-red-500 text-lg font-bold">{student.tasksIncomplete}</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Zincir</p>
+                                        <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Aktiflik</p>
                                         <p className="text-primary text-lg font-bold">{student.streak} Gün</p>
                                     </div>
                                     <div className="text-center">
@@ -379,7 +275,7 @@ const MentorAnalyticsPage = () => {
                                 {/* Success Status & Action */}
                                 <div className="flex items-center justify-end gap-6 w-full md:w-1/4">
                                     <div className={`px-4 py-2 rounded-full ${status.bg} border border-transparent`}>
-                                        <p className={`${status.text} text-sm font-bold whitespace-nowrap`}>{status.label}</p>
+                                        <p className={`${status.color} text-sm font-bold whitespace-nowrap`}>{student.riskStatus}</p>
                                     </div>
                                     <button
                                         onClick={() => handleOpenModal(student)}
@@ -480,12 +376,12 @@ const MentorAnalyticsPage = () => {
                         <div className="flex-1 overflow-y-auto p-6 bg-[#f0f2f4] dark:bg-[#111418]">
                             {activeTab === 'exams' && (
                                 selectedExamId ? (
-                                    <ExamDetailPage embedded={true} onBack={handleBackToExams} />
+                                    <ExamDetailPage embedded={true} onBack={handleBackToExams} examId={selectedExamId} />
                                 ) : (
-                                    <ExamsPage embedded={true} onExamClick={handleExamClick} />
+                                    <ExamsPage embedded={true} onExamClick={handleExamClick} studentId={selectedStudent.id} />
                                 )
                             )}
-                            {activeTab === 'analysis' && <AnalysisPage embedded={true} />}
+                            {activeTab === 'analysis' && <AnalysisPage embedded={true} studentId={selectedStudent.id} />}
                         </div>
                     </div>
                 </div>

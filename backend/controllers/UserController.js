@@ -61,6 +61,15 @@ class UserController {
             res.status(500).json({ message: error.message });
         }
     }
+
+    async getMentors(req, res) {
+        try {
+            const mentors = await UserService.getAllMentors();
+            res.json(mentors);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new UserController();

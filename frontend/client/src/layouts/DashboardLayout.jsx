@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { getAuth, clearAuth } from '../utils/authUtils';
 import { getUnreadNotificationCount } from '../services/api';
+import { getWeather, getUserLocation } from '../services/weatherService';
+import { useTheme } from '../context/ThemeContext';
 
 const DashboardLayout = () => {
     const [isAiMenuOpen, setIsAiMenuOpen] = useState(false);
@@ -9,6 +11,8 @@ const DashboardLayout = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [weather, setWeather] = useState(null);
+    const { theme, toggleTheme } = useTheme();
 
     useEffect(() => {
         const auth = getAuth();
@@ -17,7 +21,29 @@ const DashboardLayout = () => {
             // Fetch unread notification count
             fetchUnreadCount(auth.user.id);
         }
+        fetchWeather();
     }, []);
+
+    const fetchWeather = async () => {
+        try {
+            // Default to Istanbul coordinates
+            let lat = 41.0082;
+            let lon = 28.9784;
+
+            try {
+                const position = await getUserLocation();
+                lat = position.lat;
+                lon = position.lon;
+            } catch (locError) {
+                console.warn('Location access denied or unavailable, using default (Istanbul).');
+            }
+
+            const weatherData = await getWeather(lat, lon);
+            setWeather(weatherData);
+        } catch (error) {
+            console.error('Error fetching weather:', error);
+        }
+    };
 
     // Refresh unread count when navigating away from notifications page
     useEffect(() => {
@@ -178,8 +204,27 @@ const DashboardLayout = () => {
                 <main className="flex-1 flex flex-col">
                     <header className="flex items-center justify-end whitespace-nowrap border-b border-solid border-[#e0e6ed] dark:border-[#202932] px-10 py-3 bg-white dark:bg-[#18212a] sticky top-0 z-10">
                         <div className="flex flex-1 justify-end items-center gap-4">
-                            <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-transparent hover:bg-[#f0f2f4] dark:hover:bg-[#202932] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
-                                <span className="material-symbols-outlined">dark_mode</span>
+                            {/* Weather Widget (Compact) */}
+                            {weather && (
+                                <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#f0f2f4] dark:bg-[#202932]">
+                                    <div className="text-blue-600 dark:text-blue-400">
+                                        <span className={`material-symbols-outlined text-xl ${weather.color}`}>{weather.icon}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-[#111418] dark:text-white text-sm font-bold">{weather.temperature}°C</p>
+                                        <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                        <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase">{weather.label}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <button
+                                onClick={toggleTheme}
+                                className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-transparent hover:bg-[#f0f2f4] dark:hover:bg-[#202932] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0"
+                            >
+                                <span className="material-symbols-outlined">
+                                    {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                                </span>
                             </button>
                             <NavLink
                                 to="/student/bildirimler"

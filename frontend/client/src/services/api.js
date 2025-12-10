@@ -108,6 +108,23 @@ export const getUser = async (id) => {
     return response.json();
 };
 
+
+
+export const getAllMentors = async () => {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/users/mentors`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch mentors');
+    }
+
+    return response.json();
+};
+
 export const updateUser = async (id, userData) => {
     const token = getToken();
     const response = await fetch(`${BASE_URL}/users/${id}`, {
@@ -152,6 +169,21 @@ export const getStudentsByMentor = async (mentorId) => {
 
     if (!response.ok) {
         throw new Error('Failed to fetch students for mentor');
+    }
+
+    return response.json();
+};
+
+export const getStudentDashboardData = async () => {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/analysis/student-dashboard`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch student dashboard data');
     }
 
     return response.json();
@@ -671,6 +703,63 @@ export const getNotificationsByType = async (userId, type) => {
 
     if (!response.ok) {
         throw new Error('Failed to fetch notifications by type');
+    }
+
+    return response.json();
+};
+
+// ==========================
+// ANALYSIS API FUNCTIONS
+// ==========================
+
+export const getDailyActivities = async (studentId) => {
+    const token = getToken();
+    let url = `${BASE_URL}/analysis/daily-activities`;
+    if (studentId) {
+        url += `?studentId=${studentId}`;
+    }
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch daily activities');
+    }
+
+    return response.json();
+};
+
+export const getTaskAnalysis = async (timeFilter, studentId) => {
+    const token = getToken();
+    let url = `${BASE_URL}/analysis/tasks?timeFilter=${timeFilter}`;
+    if (studentId) {
+        url += `&studentId=${studentId}`;
+    }
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch task analysis');
+    }
+
+    return response.json();
+};
+
+export const getMentorStudentsAnalytics = async () => {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/analysis/mentor/students-analytics`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch mentor students analytics');
     }
 
     return response.json();
