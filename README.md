@@ -112,7 +112,6 @@ For detailed technical documentation, please refer to the `docs/` folder:
 * **DDD:** Database Design Document
 * **Architecture:** SOA Diagrams and Data Flow
 
----
 
 **License:** MIT
 
