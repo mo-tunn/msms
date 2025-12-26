@@ -1,101 +1,121 @@
 
-# Geliştirme ve Git İş Akışı Rehberi
+#  MSMS - Mentor-based Student Management System
 
-Bu rehber, Notion üzerinden size atanan görevleri tamamlarken izlemeniz gereken standart Git akışını özetlemektedir.
+![Status](https://img.shields.io/badge/Status-Active-success)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Version](https://img.shields.io/badge/Version-1.0.0-orange)
 
-TaskBoard : https://disco-nerve-a2b.notion.site/msms?v=5bb286513c6e4d28b0dfa3792c50d108
+**MSMS** is a comprehensive platform designed for mentors to professionally manage students preparing for the university entrance exam (YKS). The system digitizes the coaching process and includes a unique **AI-powered book analysis engine** that predicts book popularity based on sales data.
 
-## I. Temel Kurallar
+##  About the Project
 
-1.  **Ana Dal (main):** Sadece bitmiş uygulamanın son halini içerir. **Asla doğrudan push yapmayın.**
-2.  **Geliştirme Dalı (develop):** Tüm geliştirmelerin birleştiği ana daldır. Pull Request'ler buraya açılır.
-3.  **Her Görev = Yeni Branch:** Başladığınız her görev veya özellik için mutlaka yeni bir branch oluşturun.
+This platform bridges the gap between mentors and students through data-driven tracking. It operates on a **Service-Oriented Architecture (SOA)**, integrating multiple technologies (Node.js, Python/ML, gRPC) to provide a seamless experience.
 
-## II. İş Akışı: Adım Adım Komutlar
+###  Core Feature: AI Book Analysis Module
+The system utilizes a Machine Learning regression model to help students make informed decisions about study materials.
+* **The Logic:** The model analyzes technical attributes of a book to predict its **sales volume**.
+* **The Goal:** Predicted sales figures serve as a proxy for "popularity." This helps students prioritize resources that are widely used and trusted by the community, optimizing their study time.
 
-### 1\. Projeyi Klonlama (Sadece İlk Sefer)
+##  Tech Stack
 
+The project is built using a modern stack and microservice-like communication patterns.
+
+| Area | Technologies |
+| :--- | :--- |
+| **Frontend** | React, Vite, Tailwind CSS, Context API |
+| **Backend** | Node.js, Express.js, JWT Auth |
+| **Database** | SQL (PostgreSQL), Raw SQL/Sequelize |
+| **AI / ML** | Python, Scikit-Learn, Pandas, gRPC (Protobuf) |
+| **Identity** | Mock SOAP Web Service (WSDL) |
+| **Communication** | REST API, gRPC, SOAP |
+
+##  Architecture & Directory Structure
+
+The system consists of four main distinct components:
+
+1.  **`backend/`**: The main application server. It handles client requests, manages the database, and communicates with the AI service via `gRPC`.
+2.  **`frontend/client/`**: The React-based user interface for Mentors, Students, and Admins.
+3.  **`external-services/PythonMLEngine/`**: A Python-based gRPC server that hosts the ML model for book sales predictions.
+4.  **`external-services/MockIdentityProvider/`**: A SOAP service simulating a government ID (TC Identity) verification system.
+
+##  Key Features
+
+###  Mentor Panel
+* **Student Management:** Add students, verify identities via SOAP, and manage profiles.
+* **Academic Tracking:** Input trial exam results and visualize progress charts.
+* **Scheduling:** Organize meetings and study sessions (Calendar integration).
+* **Task System:** Assign specific tasks to students and track completion status.
+
+###  Student Panel
+* **Performance Analytics:** View exam results and personal growth graphs.
+* **AI Book Assistant:** Query books to see popularity predictions and AI-driven insights.
+* **My Schedule:** Track weekly lessons and mentor meetings.
+
+##  Installation & Setup
+
+Follow these steps to run the project locally.
+
+### 1. Database Setup
+Initialize the database using the scripts found in the `backend/database/` folder.
+* Run `create-db.js` or the relevant `.sql` script to create tables.
+* Run `seed-db.js` to populate the database with initial dummy data.
+
+### 2. Backend (Node.js) Setup
 ```bash
-git clone <repo-url>
+cd backend
+npm install
+# Ensure you configure your .env file with DB credentials
+node server.js
+
 ```
 
-### 2\. Yeni Bir Branch Oluşturma
+### 3. AI Engine (Python) Setup
 
-Yeni göreviniz için mutlaka `develop` dalından dallanarak yeni bir branch oluşturun ve ona geçiş yapın.
+For the book recommendation feature to work, the gRPC server must be running:
 
 ```bash
-# Yeni branch oluştur ve geçiş yap
-git checkout -b <branch-adiniz>
+cd external-services/PythonMLEngine
+pip install -r requirements.txt
+python grpc_server.py
+
 ```
 
-> **Önemli: Branch İsimlendirme Standardı**
-> Tüm isimler küçük harf olmalı ve kelimeler `-` (tire) ile ayrılmalıdır.
->
->   * **Özellik:** `feature/login-ekle`
->   * **Hata Düzeltme:** `bugfix/navbar-duzelt`
->   * **Dokümantasyon:** `docs/readme-guncelle`
+### 4. Mock Identity Provider (Optional)
 
-### 3\. Değişiklik Yapma ve Kaydetme (Commit)
-
-Çalışmanızı kaydetmek için düzenli olarak bu adımları uygulayın. Commit mesajınız kısa ve ne yaptığınızı açıkça anlatan nitelikte olmalıdır.
+To simulate the ID verification service:
 
 ```bash
-# Değişiklikleri kayda hazır hale getir
-git add .
+cd external-services/MockIdentityProvider
+npm install
+node server.js
 
-# Değişiklikleri commit et
-git commit -m "<commit-mesajiniz>"
 ```
 
-### 4\. Değişiklikleri Depoya Kaydetme (Push)
-
-Yerel branch'inizdeki değişiklikleri GitHub'a yükleyin.
+### 5. Frontend (React) Setup
 
 ```bash
-# İlk push (branch'i remote'a bağlar)
-git push -u origin <branch-adiniz>
+cd frontend/client
+npm install
+npm run dev
 
-# Sonraki push'lar için
-git push
 ```
 
-### 5\. Pull Request (PR) Oluşturma
+##  AI Model Training
 
-Göreviniz bittiğinde, branch'inizdeki değişiklikleri `develop`'a birleştirmek için GitHub üzerinden bir Pull Request (PR) oluşturun.
+The model training process is documented in `external-services/BookSalesPrediction`. The system uses a `Gradient Boosting Regressor` model trained on the `Kitapyurdu` dataset (located in `datasetVersions`), which yielded the highest accuracy metrics among tested algorithms.
 
-  * **Hedef:** Her zaman **`develop`** dalını seçin.
-  * **Açıklama:** PR başlığı ve açıklaması, ne yaptığınızı açıkça belirtmelidir.
+##  Documentation
 
-### 6\. Kod İncelemesi ve Merge
+For detailed technical documentation, please refer to the `docs/` folder:
 
-Oluşturduğunuz PR, diğer ekip üyeleri tarafından incelenip onaylandıktan sonra, `develop` dalına birleştirilecektir (Merge).
+* **SRS:** Software Requirement Specification
+* **DDD:** Database Design Document
+* **Architecture:** SOA Diagrams and Data Flow
 
-### 7\. Branch'i Güncel Tutma (Conflict Önleme)
+---
 
-Yeni bir görev öncesinde veya uzun süre çalıştığınızda, branch'inizi `develop` ile güncel tutarak çakışmaları (conflict) önleyin.
+**License:** MIT
 
-```bash
-# 1. develop'a geç ve en güncel halini çek
-git checkout develop
-git pull origin develop
-
-# 2. Çalıştığınız branch'e geri dön
-git checkout <branch-adiniz>
-
-# 3. develop'taki değişiklikleri merge et
-git merge develop
 ```
 
-> **Çakışma Uyarısı:** Eğer `git merge develop` sırasında çakışma çıkarsa, dosyaları düzenleyerek çakışmaları çözün, ardından `git add .` ve `git commit` ile kaydedin.
-
-### 8\. Branch Silme (Temizlik)
-
-PR merge edildikten sonra temizlik amacıyla branch'inizi silebilirsiniz.
-
-```bash
-# Uzak (Remote) branch silme
-git push origin --delete <branch-adiniz>
-
-# Yerel (Lokal) branch silme
-git branch -d <branch-adiniz>
 ```
