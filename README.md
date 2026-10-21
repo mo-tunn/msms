@@ -1,120 +1,146 @@
+# MSMS — Mentor-Based Student Management System
 
-#  MSMS - Mentor-based Student Management System
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![Frontend: React](https://img.shields.io/badge/Frontend-React-149eca.svg)
+![Backend: Node.js](https://img.shields.io/badge/Backend-Node.js-43853d.svg)
 
-![Status](https://img.shields.io/badge/Status-Active-success)
-![License](https://img.shields.io/badge/License-MIT-blue)
-![Version](https://img.shields.io/badge/Version-1.0.0-orange)
+MSMS is a student and mentor platform for YKS preparation. It brings study planning, exam tracking, mentor communication, and an ML-powered book sales estimate together in one application.
 
-**MSMS** is a comprehensive platform designed for mentors to professionally manage students preparing for the university entrance exam (YKS). The system digitizes the coaching process and includes a unique **AI-powered book analysis engine** that predicts book popularity based on sales data.
+## Screenshots
 
-##  About the Project
+The gallery shows the implemented React screens with a demo account and local mock API responses. Names and records are sample data; the screenshots do not contain real user information or live service responses. Select an image to open it at full size.
 
-This platform bridges the gap between mentors and students through data-driven tracking. It operates on a **Service-Oriented Architecture (SOA)**, integrating multiple technologies (Node.js, Python/ML, gRPC) to provide a seamless experience.
+| Sign in | Student home |
+| --- | --- |
+| [<img src="docs/screenshots/login.png" alt="MSMS sign-in screen" width="480">](docs/screenshots/login.png) | [<img src="docs/screenshots/home.png" alt="Student dashboard with exam and study summaries" width="480">](docs/screenshots/home.png) |
 
-###  Core Feature: AI Book Analysis Module
-The system utilizes a Machine Learning regression model to help students make informed decisions about study materials.
-* **The Logic:** The model analyzes technical attributes of a book to predict its **sales volume**.
-* **The Goal:** Predicted sales figures serve as a proxy for "popularity." This helps students prioritize resources that are widely used and trusted by the community, optimizing their study time.
+| Study schedule | Learning analytics |
+| --- | --- |
+| [<img src="docs/screenshots/schedule.png" alt="Weekly study schedule" width="480">](docs/screenshots/schedule.png) | [<img src="docs/screenshots/analysis.png" alt="Study streak and task completion analytics" width="480">](docs/screenshots/analysis.png) |
 
-##  Tech Stack
+| Exams | Meetings |
+| --- | --- |
+| [<img src="docs/screenshots/exams.png" alt="Exam history and results" width="480">](docs/screenshots/exams.png) | [<img src="docs/screenshots/meetings.png" alt="Student meetings view" width="480">](docs/screenshots/meetings.png) |
 
-The project is built using a modern stack and microservice-like communication patterns.
+| Mentor messages | Notifications |
+| --- | --- |
+| [<img src="docs/screenshots/messages.png" alt="Mentor contact screen" width="480">](docs/screenshots/messages.png) | [<img src="docs/screenshots/notifications.png" alt="Student notifications screen" width="480">](docs/screenshots/notifications.png) |
 
-| Area | Technologies |
-| :--- | :--- |
-| **Frontend** | React, Vite, Tailwind CSS, Context API |
-| **Backend** | Node.js, Express.js, JWT Auth |
-| **Database** | SQL (PostgreSQL), Raw SQL/Sequelize |
-| **AI / ML** | Python, Scikit-Learn, Pandas, gRPC (Protobuf) |
-| **Identity** | Mock SOAP Web Service (WSDL) |
-| **Communication** | REST API, gRPC, SOAP |
+| Profile | Book sales estimate |
+| --- | --- |
+| [<img src="docs/screenshots/profile.png" alt="Student profile screen" width="480">](docs/screenshots/profile.png) | [<img src="docs/screenshots/book-analysis.png" alt="Book sales prediction input form" width="480">](docs/screenshots/book-analysis.png) |
 
-##  Architecture & Directory Structure
+## Features
 
-The system consists of four main distinct components:
+### Students
 
-1.  **`backend/`**: The main application server. It handles client requests, manages the database, and communicates with the AI service via `gRPC`.
-2.  **`frontend/client/`**: The React-based user interface for Mentors, Students, and Admins.
-3.  **`external-services/PythonMLEngine/`**: A Python-based gRPC server that hosts the ML model for book sales predictions.
-4.  **`external-services/MockIdentityProvider/`**: A SOAP service simulating a government ID (TC Identity) verification system.
+- Review recent TYT and AYT exam results and performance summaries.
+- Organize weekly study tasks in a calendar.
+- Track task completion and study streaks.
+- View meetings, notifications, and mentor contact details.
+- Estimate a book's sales volume from its publisher, category, and listed attributes.
 
-##  Key Features
+### Mentors and administrators
 
-###  Mentor Panel
-* **Student Management:** Add students, verify identities via SOAP, and manage profiles.
-* **Academic Tracking:** Input trial exam results and visualize progress charts.
-* **Scheduling:** Organize meetings and study sessions (Calendar integration).
-* **Task System:** Assign specific tasks to students and track completion status.
+- Manage student and mentor accounts.
+- Record and review exam results.
+- Plan study tasks and mentor meetings.
+- View student and task analytics.
+- Verify identity through a mock SOAP identity provider used for development.
 
-###  Student Panel
-* **Performance Analytics:** View exam results and personal growth graphs.
-* **AI Book Assistant:** Query books to see popularity predictions and AI-driven insights.
-* **My Schedule:** Track weekly lessons and mentor meetings.
+## AI book analysis
 
-##  Installation & Setup
+The book analysis service is a supervised **regression** model. Its target is the total sales count in the Kitapyurdu dataset; the application presents this estimate as one signal about a book's popularity.
 
-Follow these steps to run the project locally.
+The serving artifact is a scikit-learn `GradientBoostingRegressor` model. During training, numerical inputs are scaled with `MinMaxScaler`; the model, scaler, and feature list are saved as joblib/JSON artifacts and loaded by the Python prediction service. Inputs include book engagement and rating counts, price, page count, dimensions, publication year, publisher, and category.
 
-### 1. Database Setup
-Initialize the database using the scripts found in the `backend/database/` folder.
-* Run `create-db.js` or the relevant `.sql` script to create tables.
-* Run `seed-db.js` to populate the database with initial dummy data.
+The training workspace also contains experiments comparing ten regression approaches, including linear models, K-nearest neighbors, decision trees, random forests, Gradient Boosting, XGBoost, and LightGBM. The comparison code records R², adjusted R², MAE, RMSE, median absolute error, and training time. The deployed prediction service uses the saved Gradient Boosting artifact over gRPC; the Node.js backend exposes the feature to the React application over REST.
 
-### 2. Backend (Node.js) Setup
-```bash
-cd backend
-npm install
-# Ensure you configure your .env file with DB credentials
-node server.js
+## Architecture
 
+```mermaid
+flowchart LR
+    UI[React + Vite client] -->|REST / JSON| API[Node.js + Express API]
+    API --> DB[(PostgreSQL)]
+    API -->|gRPC / Protobuf| ML[Python prediction service]
+    ML --> MODEL[Gradient Boosting model]
+    API -->|SOAP / WSDL| IDP[Mock identity provider]
 ```
 
-### 3. AI Engine (Python) Setup
+| Component | Location | Responsibility |
+| --- | --- | --- |
+| React client | `frontend/client/` | Student, mentor, and admin interfaces |
+| Express API | `backend/` | Authentication, application APIs, and persistence |
+| Database scripts | `database/` | PostgreSQL schema and seed data |
+| Python ML service | `external-services/PythonMLEngine/` | Model loading and gRPC prediction endpoint |
+| Model experiments | `external-services/BookSalesPrediction/` | Dataset analysis and algorithm comparisons |
+| Mock identity service | `external-services/MockIdentityProvider/` | SOAP identity-verification development service |
 
-For the book recommendation feature to work, the gRPC server must be running:
+## Tech stack
+
+- **Frontend:** React, Vite, Tailwind CSS, React Router, Context API
+- **Backend:** Node.js, Express, JWT
+- **Database:** PostgreSQL
+- **ML:** Python, pandas, scikit-learn, joblib
+- **Service communication:** REST, gRPC with Protocol Buffers, SOAP/WSDL
+
+## Run locally
+
+### Requirements
+
+- Node.js and npm
+- Python 3
+- PostgreSQL
+
+### 1. Configure PostgreSQL
+
+Create a local database and apply the schema and seed scripts from `database/`. Configure the database connection for the backend with `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, and `DB_PORT`. Set a private `JWT_SECRET` for local development.
+
+### 2. Start the Python prediction service
+
+The checked-in model artifacts are loaded by the gRPC server on port `50051` by default.
 
 ```bash
 cd external-services/PythonMLEngine
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
 python grpc_server.py
-
 ```
 
-### 4. Mock Identity Provider (Optional)
-
-To simulate the ID verification service:
+### 3. Start the backend
 
 ```bash
-cd external-services/MockIdentityProvider
+cd backend
 npm install
-node server.js
-
+npm start
 ```
 
-### 5. Frontend (React) Setup
+The API listens on port `3000` by default. The database connection and JWT signing secret should be supplied through the local environment.
+
+### 4. Start the frontend
 
 ```bash
 cd frontend/client
 npm install
 npm run dev
-
 ```
 
-##  AI Model Training
+Vite prints the local URL when it starts. The client currently calls the API at `http://localhost:3000`.
 
-The model training process is documented in `external-services/BookSalesPrediction`. The system uses a `Gradient Boosting Regressor` model trained on the `Kitapyurdu` dataset (located in `datasetVersions`), which yielded the highest accuracy metrics among tested algorithms.
+### Optional: mock identity provider
 
-##  Documentation
-
-For detailed technical documentation, please refer to the `docs/` folder:
-
-* **SRS:** Software Requirement Specification
-* **DDD:** Database Design Document
-* **Architecture:** SOA Diagrams and Data Flow
-
-
-**License:** MIT
-
+```bash
+cd external-services/MockIdentityProvider
+npm install
+node server.js
 ```
 
-```
+## Documentation
+
+Architecture diagrams and project documents are in [`docs/`](docs/). Database schema and seed scripts are in [`database/`](database/). The model training and evaluation workspace is under [`external-services/BookSalesPrediction/`](external-services/BookSalesPrediction/).
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](LICENSE).
